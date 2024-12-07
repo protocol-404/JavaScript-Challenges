@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>change-color - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Changer la couleur du corps de la page lors d'un clic</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Créez un bouton qui change la couleur de fond de la page de manière aléatoire à chaque clic.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <pre><code class="language-javascript">
+const getColor = () => document.body.style.backgroundColor = '#3b82f6';
+
+document.body.addEventListener('click', function() {
+    document.body.style.backgroundColor = getColor();
+});
+                </code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg text-center">
+                <button id="colorButton" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    Changer la couleur
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const getColor = () => document.body.style.backgroundColor = '#3b82f6';
+
+        document.getElementById('colorButton').addEventListener('click', function() {
+            document.body.style.backgroundColor = getColor();
+        });
+
+        // document.body.addEventListener('click', function() {
+        //     document.body.style.backgroundColor = getColor();
+        // });
+    </script>
+</body>
+</html>

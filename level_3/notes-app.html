@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notes-app - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .note-card {
+            transition: all 0.3s ease;
+        }
+        
+        .note-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .note-textarea {
+            resize: none;
+            height: 150px;
+        }
+        
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .color-dot:hover {
+            transform: scale(1.2);
+        }
+        
+        .color-dot.selected {
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #4b5563;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Système de notes avec localStorage</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Créez une application de gestion de notes avec sauvegarde locale.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
+                <pre><code class="language-javascript">
+const NotesManager = {
+    notes: [],
+    
+    init() {
+        const savedNotes = localStorage.getItem('notes');
+        this.notes = savedNotes ? JSON.parse(savedNotes) : [];
+        this.save();
+    },
+    
+    save() {
+        localStorage.setItem('notes', JSON.stringify(this.notes));
+    },
+    
+    addNote(title, content, color = '#FCD34D') {
+        const note = {
+            id: Date.now(),
+            title,
+            content,
+            color,
+            createdAt: new Date().toLocaleString()
+        };
+        this.notes.push(note);
+        this.save();
+        return note;
+    },
+    
+    updateNote(id, updates) {
+        const note = this.notes.find(n => n.id === parseInt(id));
+        if (note) {
+            Object.assign(note, updates);
+            this.save();
+            return note;
+        }
+        return null;
+    },
+    
+    deleteNote(id) {
+        this.notes = this.notes.filter(note => note.id !== parseInt(id));
+        this.save();
+    },
+    
+    searchNotes(query) {
+        query = query.toLowerCase();
+        return this.notes.filter(note => 
+            note.title.toLowerCase().includes(query) || 
+            note.content.toLowerCase().includes(query)
+        );
+    }
+};
+
+const UI = {
+    notesList: document.getElementById('notesList'),
+    noteForm: document.getElementById('noteForm'),
+    searchInput: document.getElementById('searchInput'),
+    colorPicker: document.getElementById('colorPicker'),
+    selectedColor: '#FCD34D',
+    
+    init() {
+        NotesManager.init();
+        this.renderNotes();
+        this.setupEventListeners();
+        this.setupColorPicker();
+    },
+    
+    setupEventListeners() {
+        this.noteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const titleInput = this.noteForm.querySelector('#titleInput');
+            const contentInput = this.noteForm.querySelector('#contentInput');
+            
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+            
+            if (title && content) {
+                const note = NotesManager.addNote(title, content, this.selectedColor);
+                this.createNoteElement(note);
+                titleInput.value = '';
+                contentInput.value = '';
+            }
+        });
+        
+        this.searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            const filteredNotes = NotesManager.searchNotes(query);
+            this.renderNotes(filteredNotes);
+        });
+    },
+    
+    setupColorPicker() {
+        const colors = ['#FCD34D', '#34D399', '#60A5FA', '#F87171', '#A78BFA'];
+        const picker = this.colorPicker;
+        
+        colors.forEach(color => {
+            const dot = document.createElement('div');
+            dot.className = 'color-dot';
+            dot.style.backgroundColor = color;
+            if (color === this.selectedColor) {
+                dot.classList.add('selected');
+            }
+            
+            dot.addEventListener('click', () => {
+                picker.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+                dot.classList.add('selected');
+                this.selectedColor = color;
+            });
+            
+            picker.appendChild(dot);
+        });
+    },
+    
+    createNoteElement(note) {
+        const div = document.createElement('div');
+        div.className = 'note-card p-4 rounded-lg mb-4';
+        div.style.backgroundColor = note.color;
+        div.dataset.id = note.id;
+        
+        const header = document.createElement('div');
+        header.className = 'flex justify-between items-start mb-2';
+        
+        const title = document.createElement('h3');
+        title.className = 'font-semibold text-lg';
+        title.textContent = note.title;
+        
+        const buttonsDiv = document.createElement('div');
+        buttonsDiv.className = 'space-x-2';
+        
+        const editButton = document.createElement('button');
+        editButton.className = 'px-2 py-1 bg-white rounded shadow hover:bg-gray-100';
+        editButton.textContent = 'Éditer';
+        editButton.addEventListener('click', () => this.editNote(note));
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'px-2 py-1 bg-white rounded shadow hover:bg-gray-100';
+        deleteButton.textContent = 'Supprimer';
+        deleteButton.addEventListener('click', () => {
+            NotesManager.deleteNote(note.id);
+            div.remove();
+        });
+        
+        const content = document.createElement('p');
+        content.className = 'text-gray-800 mb-2';
+        content.textContent = note.content;
+        
+        const date = document.createElement('small');
+        date.className = 'text-gray-600';
+        date.textContent = note.createdAt;
+        
+        buttonsDiv.appendChild(editButton);
+        buttonsDiv.appendChild(deleteButton);
+        header.appendChild(title);
+        header.appendChild(buttonsDiv);
+        
+        div.appendChild(header);
+        div.appendChild(content);
+        div.appendChild(date);
+        
+        this.notesList.insertBefore(div, this.notesList.firstChild);
+    },
+    
+    editNote(note) {
+        const div = document.querySelector(`[data-id="${note.id}"]`);
+        const title = div.querySelector('h3');
+        const content = div.querySelector('p');
+        const editButton = div.querySelector('button');
+        
+        const titleInput = document.createElement('input');
+        titleInput.type = 'text';
+        titleInput.className = 'w-full p-1 mb-2 border rounded';
+        titleInput.value = note.title;
+        
+        const contentInput = document.createElement('textarea');
+        contentInput.className = 'w-full p-1 mb-2 border rounded';
+        contentInput.value = note.content;
+        
+        const saveButton = document.createElement('button');
+        saveButton.className = 'px-2 py-1 bg-white rounded shadow hover:bg-gray-100';
+        saveButton.textContent = 'Sauvegarder';
+        
+        saveButton.addEventListener('click', () => {
+            const updates = {
+                title: titleInput.value.trim(),
+                content: contentInput.value.trim()
+            };
+            
+            if (updates.title && updates.content) {
+                NotesManager.updateNote(note.id, updates);
+                title.textContent = updates.title;
+                content.textContent = updates.content;
+                
+                titleInput.replaceWith(title);
+                contentInput.replaceWith(content);
+                saveButton.replaceWith(editButton);
+            }
+        });
+        
+        title.replaceWith(titleInput);
+        content.replaceWith(contentInput);
+        editButton.replaceWith(saveButton);
+    },
+    
+    renderNotes(notes = NotesManager.notes) {
+        this.notesList.textContent = '';
+        notes.forEach(note => this.createNoteElement(note));
+    }
+};
+</code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-xl mx-auto">
+                    <!-- Barre de recherche -->
+                    <div class="mb-6">
+                        <input type="text" 
+                               id="searchInput" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               placeholder="Rechercher une note...">
+                    </div>
+                    
+                    <!-- Formulaire d'ajout -->
+                    <form id="noteForm" class="bg-white p-4 rounded-lg shadow-sm mb-6">
+                        <div class="space-y-4">
+                            <input type="text" 
+                                   id="titleInput" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   placeholder="Titre de la note" 
+                                   required>
+                            
+                            <textarea id="contentInput" 
+                                      class="note-textarea w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                      placeholder="Contenu de la note" 
+                                      required></textarea>
+                            
+                            <div class="flex justify-between items-center">
+                                <div id="colorPicker" class="flex space-x-2"></div>
+                                
+                                <button type="submit" 
+                                        class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                    Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <!-- Liste des notes -->
+                    <div id="notesList" class="space-y-4"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const NotesManager = {
+            notes: [],
+            
+            init() {
+                const savedNotes = localStorage.getItem('notes');
+                this.notes = savedNotes ? JSON.parse(savedNotes) : [];
+                this.save();
+            },
+            
+            save() {
+                localStorage.setItem('notes', JSON.stringify(this.notes));
+            },
+            
+            addNote(title, content, color = '#FCD34D') {
+                const note = {
+                    id: Date.now(),
+                    title,
+                    content,
+                    color,
+                    createdAt: new Date().toLocaleString()
+                };
+                this.notes.push(note);
+                this.save();
+                return note;
+            },
+            
+            updateNote(id, updates) {
+                const note = this.notes.find(n => n.id === parseInt(id));
+                if (note) {
+                    Object.assign(note, updates);
+                    this.save();
+                    return note;
+                }
+                return null;
+            },
+            
+            deleteNote(id) {
+                this.notes = this.notes.filter(note => note.id !== parseInt(id));
+                this.save();
+            },
+            
+            searchNotes(query) {
+                query = query.toLowerCase();
+                return this.notes.filter(note => 
+                    note.title.toLowerCase().includes(query) || 
+                    note.content.toLowerCase().includes(query)
+                );
+            }
+        };
+
+        const UI = {
+            notesList: document.getElementById('notesList'),
+            noteForm: document.getElementById('noteForm'),
+            searchInput: document.getElementById('searchInput'),
+            colorPicker: document.getElementById('colorPicker'),
+            selectedColor: '#FCD34D',
+            
+            init() {
+                NotesManager.init();
+                this.renderNotes();
+                this.setupEventListeners();
+                this.setupColorPicker();
+            },
+            
+            setupEventListeners() {
+                this.noteForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const titleInput = this.noteForm.querySelector('#titleInput');
+                    const contentInput = this.noteForm.querySelector('#contentInput');
+                    
+                    const title = titleInput.value.trim();
+                    const content = contentInput.value.trim();
+                    
+                    if (title && content) {
+                        const note = NotesManager.addNote(title, content, this.selectedColor);
+                        this.createNoteElement(note);
+                        titleInput.value = '';
+                        contentInput.value = '';
+                    }
+                });
+                
+                this.searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.trim();
+                    const filteredNotes = NotesManager.searchNotes(query);
+                    this.renderNotes(filteredNotes);
+                });
+            },
+            
+            setupColorPicker() {
+                const colors = ['#FCD34D', '#34D399', '#60A5FA', '#F87171', '#A78BFA'];
+                const picker = this.colorPicker;
+                
+                colors.forEach(color => {
+                    const dot = document.createElement('div');
+                    dot.className = 'color-dot';
+                    dot.style.backgroundColor = color;
+                    if (color === this.selectedColor) {
+                        dot.classList.add('selected');
+                    }
+                    
+                    dot.addEventListener('click', () => {
+                        picker.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+                        dot.classList.add('selected');
+                        this.selectedColor = color;
+                    });
+                    
+                    picker.appendChild(dot);
+                });
+            },
+            
+            createNoteElement(note) {
+                const div = document.createElement('div');
+                div.className = 'note-card p-4 rounded-lg mb-4';
+                div.style.backgroundColor = note.color;
+                div.dataset.id = note.id;
+                
+                const header = document.createElement('div');
+                header.className = 'flex justify-between items-start mb-2';
+                
+                const title = document.createElement('h3');
+                title.className = 'font-semibold text-lg';
+                title.textContent = note.title;
+                
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.className = 'space-x-2';
+                
+                const editButton = document.createElement('button');
+                editButton.className = 'px-2 py-1 bg-white rounded shadow hover:bg-gray-100';
+                editButton.textContent = 'Éditer';
+                editButton.addEventListener('click', () => this.editNote(note));
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'px-2 py-1 bg-white rounded shadow hover:bg-gray-100';
+                deleteButton.textContent = 'Supprimer';
+                deleteButton.addEventListener('click', () => {
+                    NotesManager.deleteNote(note.id);
+                    div.remove();
+                });
+                
+                const content = document.createElement('p');
+                content.className = 'text-gray-800 mb-2';
+                content.textContent = note.content;
+                
+                const date = document.createElement('small');
+                date.className = 'text-gray-600';
+                date.textContent = note.createdAt;
+                
+                buttonsDiv.appendChild(editButton);
+                buttonsDiv.appendChild(deleteButton);
+                header.appendChild(title);
+                header.appendChild(buttonsDiv);
+                
+                div.appendChild(header);
+                div.appendChild(content);
+                div.appendChild(date);
+                
+                this.notesList.insertBefore(div, this.notesList.firstChild);
+            },
+            
+            editNote(note) {
+                const div = document.querySelector(`[data-id="${note.id}"]`);
+                const title = div.querySelector('h3');
+                const content = div.querySelector('p');
+                const editButton = div.querySelector('button');
+                
+                const titleInput = document.createElement('input');
+                titleInput.type = 'text';
+                titleInput.className = 'w-full p-1 mb-2 border rounded';
+                titleInput.value = note.title;
+                
+                const contentInput = document.createElement('textarea');
+                contentInput.className = 'w-full p-1 mb-2 border rounded';
+                contentInput.value = note.content;
+                
+                const saveButton = document.createElement('button');
+                saveButton.className = 'px-2 py-1 bg-white rounded shadow hover:bg-gray-100';
+                saveButton.textContent = 'Sauvegarder';
+                
+                saveButton.addEventListener('click', () => {
+                    const updates = {
+                        title: titleInput.value.trim(),
+                        content: contentInput.value.trim()
+                    };
+                    
+                    if (updates.title && updates.content) {
+                        NotesManager.updateNote(note.id, updates);
+                        title.textContent = updates.title;
+                        content.textContent = updates.content;
+                        
+                        titleInput.replaceWith(title);
+                        contentInput.replaceWith(content);
+                        saveButton.replaceWith(editButton);
+                    }
+                });
+                
+                title.replaceWith(titleInput);
+                content.replaceWith(contentInput);
+                editButton.replaceWith(saveButton);
+            },
+            
+            renderNotes(notes = NotesManager.notes) {
+                this.notesList.textContent = '';
+                notes.forEach(note => this.createNoteElement(note));
+            }
+        };
+
+        // Initialize the application
+        UI.init();
+    </script>
+</body>
+</html>

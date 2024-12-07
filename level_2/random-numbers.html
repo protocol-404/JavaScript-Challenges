@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>random-numbers - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .number-cell {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .flash {
+            animation: flash 0.5s;
+        }
+        
+        @keyframes flash {
+            0% { background-color: rgba(59, 130, 246, 0.2); }
+            100% { background-color: transparent; }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Générer des nombres aléatoires</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Affichez des nombres aléatoires dans un tableau dynamique.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <pre><code class="language-javascript">
+const numbersTable = document.getElementById('numbersTable');
+const generateBtn = document.getElementById('generateBtn');
+const clearBtn = document.getElementById('clearBtn');
+
+function generateRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function addNumber() {
+    const number = generateRandomNumber(1, 100);
+    const row = numbersTable.insertRow();
+    const cell1 = row.insertCell(0);
+    const cell2 = row.insertCell(1);
+    
+    cell1.textContent = numbersTable.rows.length - 1;
+    cell2.textContent = number;
+    
+    cell1.className = 'number-cell border px-4 py-2';
+    cell2.className = 'number-cell border px-4 py-2';
+    
+    numbersTable.parentElement.scrollTop = numbersTable.parentElement.scrollHeight;
+}
+
+generateBtn.addEventListener('click', addNumber);
+
+clearBtn.addEventListener('click', () => {
+    while(numbersTable.rows.length > 1) {
+        numbersTable.deleteRow(1);
+    }
+});
+                </code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-xl mx-auto">
+                    <!-- Control Buttons -->
+                    <div class="flex justify-center gap-4 mb-6">
+                        <button id="generateBtn" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            Générer un nombre
+                        </button>
+                        <button id="clearBtn" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                            Effacer tout
+                        </button>
+                    </div>
+                    
+                    <!-- Numbers Table -->
+                    <div class="max-h-80 overflow-y-auto">
+                        <table id="numbersTable" class="w-full bg-white rounded-lg overflow-hidden">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="border px-4 py-2 w-1/4">ID</th>
+                                    <th class="border px-4 py-2">Nombre aléatoire</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const numbersTable = document.getElementById('numbersTable');
+        const generateBtn = document.getElementById('generateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+
+        function generateRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function addNumber() {
+            const number = generateRandomNumber(1, 100);
+            const row = numbersTable.insertRow();
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            
+            cell1.textContent = numbersTable.rows.length - 1;
+            cell2.textContent = number;
+            
+            cell1.className = 'number-cell border px-4 py-2';
+            cell2.className = 'number-cell border px-4 py-2';
+            
+            // Faire défiler vers le bas
+            numbersTable.parentElement.scrollTop = numbersTable.parentElement.scrollHeight;
+        }
+
+        generateBtn.addEventListener('click', addNumber);
+
+        clearBtn.addEventListener('click', () => {
+            while(numbersTable.rows.length > 1) {
+                numbersTable.deleteRow(1);
+            }
+        });
+    </script>
+</body>
+</html>

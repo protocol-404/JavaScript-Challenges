@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drag-drop - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .dragging {
+            opacity: 0.5;
+            background-color: #e5e7eb !important;
+        }
+        .drag-over {
+            border: 2px dashed #3b82f6;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Réorganiser une liste par glisser-déposer</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Créez une liste d'éléments que l'utilisateur peut réorganiser en utilisant le glisser-déposer.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <pre><code class="language-javascript">
+const dragList = document.getElementById('dragList');
+const items = document.querySelectorAll('.drag-item');
+
+items.forEach(item => {
+    item.addEventListener('dragstart', dragStart);
+    item.addEventListener('dragend', dragEnd);
+    item.addEventListener('dragover', dragOver);
+    item.addEventListener('drop', drop);
+});
+
+function dragStart(e) {
+    e.target.classList.add('dragging');
+}
+
+function dragEnd(e) {
+    e.target.classList.remove('dragging');
+}
+
+function dragOver(e) {
+    e.preventDefault();
+    const draggingItem = document.querySelector('.dragging');
+    const items = [...dragList.querySelectorAll('.drag-item:not(.dragging)')];
+    
+    const nextItem = items.find(item => {
+        const rect = item.getBoundingClientRect();
+        const centerY = rect.top + rect.height / 2;
+        return e.clientY < centerY;
+    });
+    
+    if (nextItem) {
+        dragList.insertBefore(draggingItem, nextItem);
+    } else {
+        dragList.appendChild(draggingItem);
+    }
+}
+
+function drop(e) {
+    e.preventDefault();
+}
+        </code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <ul id="dragList" class="space-y-2">
+                    <li class="drag-item bg-white p-4 rounded shadow cursor-move flex items-center" draggable="true">
+                        <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+                        </svg>
+                        Élément 1
+                    </li>
+                    <li class="drag-item bg-white p-4 rounded shadow cursor-move flex items-center" draggable="true">
+                        <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+                        </svg>
+                        Élément 2
+                    </li>
+                    <li class="drag-item bg-white p-4 rounded shadow cursor-move flex items-center" draggable="true">
+                        <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+                        </svg>
+                        Élément 3
+                    </li>
+                    <li class="drag-item bg-white p-4 rounded shadow cursor-move flex items-center" draggable="true">
+                        <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+                        </svg>
+                        Élément 4
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const dragList = document.getElementById('dragList');
+        const items = document.querySelectorAll('.drag-item');
+
+        items.forEach(item => {
+            item.addEventListener('dragstart', dragStart);
+            item.addEventListener('dragend', dragEnd);
+            item.addEventListener('dragover', dragOver);
+            item.addEventListener('drop', drop);
+        });
+
+        function dragStart(e) {
+            e.target.classList.add('dragging');
+        }
+
+        function dragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            const draggingItem = document.querySelector('.dragging');
+            const items = [...dragList.querySelectorAll('.drag-item:not(.dragging)')];
+            
+            const nextItem = items.find(item => {
+                const rect = item.getBoundingClientRect();
+                const centerY = rect.top + rect.height / 2;
+                return e.clientY < centerY;
+            });
+            
+            if (nextItem) {
+                dragList.insertBefore(draggingItem, nextItem);
+            } else {
+                dragList.appendChild(draggingItem);
+            }
+        }
+
+        function drop(e) {
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>

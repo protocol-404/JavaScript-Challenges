@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>progress-bar - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Barre de progression dynamique</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Ajoutez une barre de progression qui se remplit selon une action utilisateur.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <pre><code class="language-javascript">
+const progressBar = document.querySelector('.progress-bar');
+const progressText = document.querySelector('.progress-text');
+const incrementBtn = document.getElementById('incrementBtn');
+const resetBtn = document.getElementById('resetBtn');
+let progress = 0;
+
+incrementBtn.addEventListener('click', () => {
+    if (progress < 100) {
+        progress += 10;
+        updateProgress();
+        
+        if (progress === 100) {
+            progressBar.classList.remove('bg-blue-500');
+            progressBar.classList.add('bg-green-500');
+            progressText.textContent = 'Terminé !';
+            progressText.classList.add('text-green-500');
+            incrementBtn.disabled = true;
+            incrementBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+});
+
+resetBtn.addEventListener('click', () => {
+    progress = 0;
+    updateProgress();
+    progressBar.classList.remove('bg-green-500');
+    progressText.textContent = '0%';
+    progressText.classList.remove('text-green-500');
+    incrementBtn.disabled = false;
+    incrementBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+});
+
+function updateProgress() {
+    progressBar.style.width = progress + '%';
+    if (progress < 100) {
+        progressText.textContent = progress + '%';
+    }
+}
+                </code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-xl mx-auto">
+                    <!-- Progress Container -->
+                    <div class="h-6 bg-gray-200 rounded-full mb-4 overflow-hidden">
+                        <div class="progress-bar h-full bg-blue-500 w-0"></div>
+                    </div>
+                    
+                    <!-- Progress Text -->
+                    <div class="text-center mb-6">
+                        <span class="progress-text text-xl font-semibold">0%</span>
+                    </div>
+                    
+                    <!-- Control Buttons -->
+                    <div class="flex justify-center gap-4">
+                        <button id="incrementBtn" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            +10%
+                        </button>
+                        <button id="resetBtn" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                            Réinitialiser
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const progressBar = document.querySelector('.progress-bar');
+        const progressText = document.querySelector('.progress-text');
+        const incrementBtn = document.getElementById('incrementBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        let progress = 0;
+
+        incrementBtn.addEventListener('click', () => {
+            if (progress < 100) {
+                progress += 10;
+                updateProgress();
+                
+                if (progress === 100) {
+                    progressBar.classList.remove('bg-blue-500');
+                    progressBar.classList.add('bg-green-500');
+                    progressText.textContent = 'Terminé !';
+                    progressText.classList.add('text-green-500');
+                    incrementBtn.disabled = true;
+                    incrementBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            progress = 0;
+            updateProgress();
+            progressBar.classList.remove('bg-green-500');
+            progressText.textContent = '0%';
+            progressText.classList.remove('text-green-500');
+            incrementBtn.disabled = false;
+            incrementBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        });
+
+        function updateProgress() {
+            progressBar.style.width = progress + '%';
+            if (progress < 100) {
+                progressText.textContent = progress + '%';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dynamic-list - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Créer une liste d'éléments dynamique</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Permettez à l'utilisateur d'ajouter et de supprimer des éléments d'une liste en utilisant un formulaire.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <pre><code class="language-javascript">
+const itemInput = document.getElementById('itemInput');
+const addButton = document.getElementById('addButton');
+const itemList = document.getElementById('itemList');
+
+addButton.addEventListener('click', () => {
+    const itemValue = itemInput.value.trim();
+    
+    if (itemValue !== '') {
+        const li = document.createElement('li');
+        li.className = 'flex justify-between items-center p-2 mb-2 bg-white rounded shadow';
+        
+        const text = document.createElement('span');
+        text.textContent = itemValue;
+        li.appendChild(text);
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '×';
+        deleteButton.className = 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600';
+        deleteButton.onclick = () => li.remove();
+        li.appendChild(deleteButton);
+        
+        itemList.appendChild(li);
+        
+        itemInput.value = '';
+    }
+});
+                </code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="itemInput" class="flex-1 border border-gray-300 rounded-lg px-4 py-2" placeholder="Nouvel élément">
+                    <button id="addButton" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        Ajouter
+                    </button>
+                </div>
+                <ul id="itemList" class="text-left"></ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Le code JavaScript sera exécuté ici
+        const itemInput = document.getElementById('itemInput');
+        const addButton = document.getElementById('addButton');
+        const itemList = document.getElementById('itemList');
+
+        addButton.addEventListener('click', () => {
+            const itemValue = itemInput.value.trim();
+            
+            if (itemValue !== '') {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center p-2 mb-2 bg-white rounded shadow';
+                
+                const text = document.createElement('span');
+                text.textContent = itemValue;
+                li.appendChild(text);
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '×';
+                deleteButton.className = 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600';
+                deleteButton.onclick = () => li.remove();
+                li.appendChild(deleteButton);
+                
+                itemList.appendChild(li);
+                
+                itemInput.value = '';
+            }
+        });
+
+        itemInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addButton.click();
+            }
+        });
+    </script>
+</body>
+</html>

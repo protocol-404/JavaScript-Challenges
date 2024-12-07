@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filter-list - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .list-item {
+            transition: all 0.3s ease;
+        }
+        
+        .hidden-item {
+            opacity: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .highlight {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Filtrer les éléments d'une liste</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Permettez de filtrer les éléments selon une saisie utilisateur.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <pre><code class="language-javascript">
+const searchInput = document.getElementById('searchInput');
+const itemsList = document.getElementById('itemsList');
+const items = itemsList.getElementsByClassName('list-item');
+const noResults = document.getElementById('noResults');
+
+searchInput.addEventListener('input', filterItems);
+
+function filterItems() {
+    const searchTerm = searchInput.value.toLowerCase();
+    let hasVisibleItems = false;
+    
+    Array.from(items).forEach(item => {
+        const text = item.textContent.toLowerCase();
+        const matches = text.includes(searchTerm);
+        
+        item.classList.toggle('hidden-item', !matches);
+        
+        // Mise en évidence du texte correspondant
+        if (matches) {
+            hasVisibleItems = true;
+            if (searchTerm) {
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                const highlightedText = item.textContent.replace(
+                    regex,
+                    '<span class="bg-blue-100">$1</span>'
+                );
+                item.innerHTML = highlightedText;
+            } else {
+                item.textContent = item.textContent;
+            }
+        }
+    });
+    
+    noResults.classList.toggle('hidden', hasVisibleItems);
+}</code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-xl mx-auto">
+                    <!-- Search Input -->
+                    <div class="mb-6">
+                        <input type="text" 
+                               id="searchInput" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               placeholder="Rechercher un élément...">
+                    </div>
+                    
+                    <!-- Items List -->
+                    <ul id="itemsList" class="space-y-2">
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Aziz benmalouk</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Aziz formateur</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">ousama oujaber</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">test</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">JavaScript</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">YouCode</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Looooooooll</li>
+                    </ul>
+
+                    <div id="noResults" class="text-center py-4 text-gray-500 hidden">
+                        Aucun résultat trouvé
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const itemsList = document.getElementById('itemsList');
+        const items = itemsList.getElementsByClassName('list-item');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', filterItems);
+
+        function filterItems() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let hasVisibleItems = false;
+
+            Array.from(items).forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const matches = text.includes(searchTerm);
+
+                item.classList.toggle('hidden-item', !matches);
+
+                if (matches) {
+                    hasVisibleItems = true;
+                    if (searchTerm) {
+                        const regex = new RegExp(`(${searchTerm})`, 'gi');
+                        const highlightedText = item.textContent.replace(
+                            regex,
+                            '<span class="bg-blue-100">$1</span>'
+                        );
+                        item.innerHTML = highlightedText;
+                    } else {
+                        item.textContent = item.textContent;
+                    }
+                }
+            });
+
+            noResults.classList.toggle('hidden', hasVisibleItems);
+        }
+    </script>
+</body>
+</html>

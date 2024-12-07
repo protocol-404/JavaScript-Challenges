@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form-validation - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Valider un formulaire avec plusieurs champs</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Ajoutez une validation pour les champs comme e-mail et mot de passe.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <pre><code class="language-javascript">
+const inputField = document.getElementById('inputField');
+const inputField2 = document.getElementById('inputField2');
+const inputField3 = document.getElementById('inputField3');
+const inputField4 = document.getElementById('inputField4');
+const inputField5 = document.getElementById('inputField5');
+const validateButton = document.getElementById('validateButton');
+
+validateButton.addEventListener('click', () => {
+    const name = inputField.value;
+    const prenom = inputField2.value;
+    const age = inputField3.value;
+    const email = inputField4.value;
+    const password = inputField5.value;
+
+    const nameRegex = /^[a-zA-Z\s]{5,}$/;
+    const prenomRegex = /^[a-zA-Z\s]{5,}$/;
+    const ageRegex = /^[0-9]{2}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+    if (nameRegex.test(name) && prenomRegex.test(prenom) && ageRegex.test(age) && emailRegex.test(email) && passwordRegex.test(password)) {
+        alert('Formulaire validé');
+    } else {
+        alert('Formulaire non validé');
+    }
+});
+                </code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
+                <input type="text" id="inputField" class="border border-gray-300 rounded-lg px-4 py-2 mb-4" placeholder="Saisissez votre Nom">
+                <input type="text" id="inputField2" class="border border-gray-300 rounded-lg px-4 py-2 mb-4" placeholder="Saisissez votre Prénom">
+                <input type="number" id="inputField3" class="border border-gray-300 rounded-lg px-4 py-2 mb-4" placeholder="Saisissez votre Age">
+                <input type="email" id="inputField4" class="border border-gray-300 rounded-lg px-4 py-2 mb-4" placeholder="Saisissez votre Email">
+                <input type="password" id="inputField5" class="border border-gray-300 rounded-lg px-4 py-2 mb-4" placeholder="Saisissez votre Mot de Passe">
+                <button id="validateButton" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    Valider
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const inputField = document.getElementById('inputField');
+        const inputField2 = document.getElementById('inputField2');
+        const inputField3 = document.getElementById('inputField3');
+        const inputField4 = document.getElementById('inputField4');
+        const inputField5 = document.getElementById('inputField5');
+        const validateButton = document.getElementById('validateButton');
+
+        validateButton.addEventListener('click', () => {
+            const name = inputField.value;
+            const prenom = inputField2.value;
+            const age = inputField3.value;
+            const email = inputField4.value;
+            const password = inputField5.value;
+
+            const nameRegex = /^[a-zA-Z\s]{5,}$/;
+            const prenomRegex = /^[a-zA-Z\s]{5,}$/;
+            const ageRegex = /^[0-9]{2}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+
+            if (nameRegex.test(name) && prenomRegex.test(prenom) && ageRegex.test(age) && emailRegex.test(email) && passwordRegex.test(password)) {
+                alert('Formulaire validé');
+            } else {
+                alert('Formulaire non validé');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputFields = document.querySelectorAll('input');
+            inputFields.forEach(input => input.value = '');
+        });
+
+    </script>
+</body>
+</html>

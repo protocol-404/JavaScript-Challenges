@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>media-player - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .custom-range {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            border-radius: 5px;
+            background: #e5e7eb;
+            outline: none;
+        }
+
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .custom-range::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .control-button {
+            transition: all 0.2s ease;
+        }
+
+        .control-button:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Lecteur audio/vidéo simple</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Ajoutez un lecteur avec des contrôles basiques pour lire des médias.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <pre><code class="language-javascript">
+const mediaPlayer = document.getElementById('mediaPlayer');
+const playButton = document.getElementById('playButton');
+const progressBar = document.getElementById('progressBar');
+const timeDisplay = document.getElementById('timeDisplay');
+const volumeControl = document.getElementById('volumeControl');
+
+playButton.addEventListener('click', togglePlay);
+progressBar.addEventListener('input', setProgress);
+volumeControl.addEventListener('input', setVolume);
+mediaPlayer.addEventListener('timeupdate', updateProgress);
+
+function togglePlay() {
+    if (mediaPlayer.paused) {
+        mediaPlayer.play();
+        playButton.textContent = '⏸️';
+    } else {
+        mediaPlayer.pause();
+        playButton.textContent = '▶️';
+    }
+}
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    seconds = Math.floor(seconds % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function updateProgress() {
+    const progress = (mediaPlayer.currentTime / mediaPlayer.duration) * 100;
+    progressBar.value = progress;
+    
+    timeDisplay.textContent = 
+        `${formatTime(mediaPlayer.currentTime)} / ${formatTime(mediaPlayer.duration)}`;
+}
+
+function setProgress() {
+    const time = (progressBar.value / 100) * mediaPlayer.duration;
+    mediaPlayer.currentTime = time;
+}
+
+function setVolume() {
+    mediaPlayer.volume = volumeControl.value;
+}</code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-xl mx-auto">
+                    <!-- Lecteur Vidéo -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4">Lecteur Vidéo</h3>
+                        <video id="mediaPlayer" class="w-full rounded-lg mb-4">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                            Votre navigateur ne supporte pas la lecture vidéo.
+                        </video>
+                        
+                        <!-- Contrôles -->
+                        <div class="space-y-4">
+                            <!-- Barre de progression -->
+                            <input type="range" id="progressBar" class="custom-range" value="0" step="0.1">
+                            
+                            <!-- Temps -->
+                            <div class="flex justify-between items-center">
+                                <span id="timeDisplay" class="text-sm text-gray-600">0:00 / 0:00</span>
+                                
+                                <!-- Contrôles principaux -->
+                                <div class="flex items-center space-x-4">
+                                    <button id="playButton" class="control-button text-2xl">▶️</button>
+                                    
+                                    <!-- Volume -->
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-lg">🔊</span>
+                                        <input type="range" id="volumeControl" class="custom-range w-24" 
+                                               min="0" max="1" step="0.1" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const mediaPlayer = document.getElementById('mediaPlayer');
+        const playButton = document.getElementById('playButton');
+        const progressBar = document.getElementById('progressBar');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const volumeControl = document.getElementById('volumeControl');
+
+        playButton.addEventListener('click', togglePlay);
+        progressBar.addEventListener('input', setProgress);
+        volumeControl.addEventListener('input', setVolume);
+        mediaPlayer.addEventListener('timeupdate', updateProgress);
+
+        function togglePlay() {
+            if (mediaPlayer.paused) {
+                mediaPlayer.play();
+                playButton.textContent = '⏸️';
+            } else {
+                mediaPlayer.pause();
+                playButton.textContent = '▶️';
+            }
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            seconds = Math.floor(seconds % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateProgress() {
+            const progress = (mediaPlayer.currentTime / mediaPlayer.duration) * 100;
+            progressBar.value = progress;
+            
+            timeDisplay.textContent = 
+                `${formatTime(mediaPlayer.currentTime)} / ${formatTime(mediaPlayer.duration)}`;
+        }
+
+        function setProgress() {
+            const time = (progressBar.value / 100) * mediaPlayer.duration;
+            mediaPlayer.currentTime = time;
+        }
+
+        function setVolume() {
+            mediaPlayer.volume = volumeControl.value;
+        }
+    </script>
+</body>
+</html>

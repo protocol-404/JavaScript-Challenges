@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todo-app - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .todo-item {
+            transition: all 0.3s ease;
+        }
+        
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+        
+        .todo-item.hidden {
+            display: none;
+        }
+        
+        .todo-item.editing .todo-text {
+            display: none;
+        }
+        
+        .todo-item:not(.editing) .edit-input {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Application Todo List</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Créez une application de liste de tâches avec stockage local, filtres et édition.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
+                <pre><code class="language-javascript">
+const TodoStorage = {
+    save(todos) {
+        localStorage.setItem('todos', JSON.stringify(todos));
+    },
+    
+    load() {
+        const todos = localStorage.getItem('todos');
+        return todos ? JSON.parse(todos) : [];
+    }
+};
+
+// Gestionnaire de tâches
+const TodoManager = {
+    todos: TodoStorage.load(),
+    
+    addTodo(text) {
+        const todo = {
+            id: Date.now(),
+            text: text,
+            completed: false
+        };
+        this.todos.push(todo);
+        TodoStorage.save(this.todos);
+        return todo;
+    },
+    
+    deleteTodo(id) {
+        this.todos = this.todos.filter(todo => todo.id !== id);
+        TodoStorage.save(this.todos);
+    },
+    
+    toggleTodo(id) {
+        const todo = this.todos.find(todo => todo.id === id);
+        if (todo) {
+            todo.completed = !todo.completed;
+            TodoStorage.save(this.todos);
+        }
+    },
+    
+    updateTodo(id, newText) {
+        const todo = this.todos.find(todo => todo.id === id);
+        if (todo) {
+            todo.text = newText;
+            TodoStorage.save(this.todos);
+        }
+    }
+};
+
+// Gestionnaire d'interface
+const UI = {
+    todoForm: document.getElementById('todoForm'),
+    todoInput: document.getElementById('todoInput'),
+    todoList: document.getElementById('todoList'),
+    filterButtons: document.querySelectorAll('.filter-btn'),
+    
+    init() {
+        this.renderTodos();
+        this.setupEventListeners();
+    },
+    
+    setupEventListeners() {
+        this.todoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = this.todoInput.value.trim();
+            if (text) {
+                const todo = TodoManager.addTodo(text);
+                this.createTodoElement(todo);
+                this.todoInput.value = '';
+            }
+        });
+        
+        this.filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter;
+                this.filterTodos(filter);
+                this.filterButtons.forEach(b => b.classList.remove('bg-blue-500', 'text-white'));
+                btn.classList.add('bg-blue-500', 'text-white');
+            });
+        });
+    },
+    
+    createTodoElement(todo) {
+        const li = document.createElement('li');
+        li.className = 'todo-item flex items-center justify-between p-3 bg-white rounded-lg shadow-sm mb-2';
+        li.dataset.id = todo.id;
+        if (todo.completed) li.classList.add('completed');
+        
+        const leftDiv = document.createElement('div');
+        leftDiv.className = 'flex items-center space-x-3';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = todo.completed;
+        checkbox.className = 'form-checkbox h-5 w-5 text-blue-500';
+        checkbox.addEventListener('change', () => {
+            TodoManager.toggleTodo(todo.id);
+            li.classList.toggle('completed');
+        });
+        
+        const textSpan = document.createElement('span');
+        textSpan.className = 'todo-text';
+        textSpan.textContent = todo.text;
+        
+        const editInput = document.createElement('input');
+        editInput.type = 'text';
+        editInput.className = 'edit-input border rounded px-2 py-1';
+        editInput.value = todo.text;
+        
+        const rightDiv = document.createElement('div');
+        rightDiv.className = 'space-x-2';
+        
+        const editButton = document.createElement('button');
+        editButton.className = 'px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600';
+        editButton.textContent = 'Éditer';
+        editButton.addEventListener('click', () => {
+            if (li.classList.contains('editing')) {
+                const newText = editInput.value.trim();
+                if (newText) {
+                    TodoManager.updateTodo(todo.id, newText);
+                    textSpan.textContent = newText;
+                }
+            }
+            li.classList.toggle('editing');
+        });
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600';
+        deleteButton.textContent = 'Supprimer';
+        deleteButton.addEventListener('click', () => {
+            TodoManager.deleteTodo(todo.id);
+            li.remove();
+        });
+        
+        leftDiv.appendChild(checkbox);
+        leftDiv.appendChild(textSpan);
+        leftDiv.appendChild(editInput);
+        
+        rightDiv.appendChild(editButton);
+        rightDiv.appendChild(deleteButton);
+        
+        li.appendChild(leftDiv);
+        li.appendChild(rightDiv);
+        
+        this.todoList.appendChild(li);
+    },
+    
+    renderTodos() {
+        TodoManager.todos.forEach(todo => this.createTodoElement(todo));
+    },
+    
+    filterTodos(filter) {
+        const todos = document.querySelectorAll('.todo-item');
+        todos.forEach(todo => {
+            const completed = todo.classList.contains('completed');
+            switch(filter) {
+                case 'all':
+                    todo.classList.remove('hidden');
+                    break;
+                case 'active':
+                    todo.classList.toggle('hidden', completed);
+                    break;
+                case 'completed':
+                    todo.classList.toggle('hidden', !completed);
+                    break;
+            }
+        });
+    }
+};</code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-xl mx-auto">
+                    <!-- Formulaire d'ajout -->
+                    <form id="todoForm" class="mb-6">
+                        <div class="flex space-x-2">
+                            <input type="text" 
+                                   id="todoInput" 
+                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   placeholder="Ajouter une tâche...">
+                            <button type="submit" 
+                                    class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Ajouter
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Filtres -->
+                    <div class="flex justify-center space-x-2 mb-6">
+                        <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-filter="all">
+                            Tout
+                        </button>
+                        <button class="filter-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" data-filter="active">
+                            Actif
+                        </button>
+                        <button class="filter-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" data-filter="completed">
+                            Terminé
+                        </button>
+                    </div>
+                    
+                    <!-- Liste des tâches -->
+                    <ul id="todoList" class="space-y-2"></ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const TodoStorage = {
+            save(todos) {
+                localStorage.setItem('todos', JSON.stringify(todos));
+            },
+            
+            load() {
+                const todos = localStorage.getItem('todos');
+                return todos ? JSON.parse(todos) : [];
+            }
+        };
+
+        // Gestionnaire de tâches
+        const TodoManager = {
+            todos: TodoStorage.load(),
+            
+            addTodo(text) {
+                const todo = {
+                    id: Date.now(),
+                    text: text,
+                    completed: false
+                };
+                this.todos.push(todo);
+                TodoStorage.save(this.todos);
+                return todo;
+            },
+            
+            deleteTodo(id) {
+                this.todos = this.todos.filter(todo => todo.id !== id);
+                TodoStorage.save(this.todos);
+            },
+            
+            toggleTodo(id) {
+                const todo = this.todos.find(todo => todo.id === id);
+                if (todo) {
+                    todo.completed = !todo.completed;
+                    TodoStorage.save(this.todos);
+                }
+            },
+            
+            updateTodo(id, newText) {
+                const todo = this.todos.find(todo => todo.id === id);
+                if (todo) {
+                    todo.text = newText;
+                    TodoStorage.save(this.todos);
+                }
+            }
+        };
+
+        // Gestionnaire d'interface
+        const UI = {
+            todoForm: document.getElementById('todoForm'),
+            todoInput: document.getElementById('todoInput'),
+            todoList: document.getElementById('todoList'),
+            filterButtons: document.querySelectorAll('.filter-btn'),
+            
+            init() {
+                this.renderTodos();
+                this.setupEventListeners();
+            },
+            
+            setupEventListeners() {
+                this.todoForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const text = this.todoInput.value.trim();
+                    if (text) {
+                        const todo = TodoManager.addTodo(text);
+                        this.createTodoElement(todo);
+                        this.todoInput.value = '';
+                    }
+                });
+                
+                this.filterButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const filter = btn.dataset.filter;
+                        this.filterTodos(filter);
+                        this.filterButtons.forEach(b => b.classList.remove('bg-blue-500', 'text-white'));
+                        btn.classList.add('bg-blue-500', 'text-white');
+                    });
+                });
+            },
+            
+            createTodoElement(todo) {
+                const li = document.createElement('li');
+                li.className = 'todo-item flex items-center justify-between p-3 bg-white rounded-lg shadow-sm mb-2';
+                li.dataset.id = todo.id;
+                if (todo.completed) li.classList.add('completed');
+                
+                const leftDiv = document.createElement('div');
+                leftDiv.className = 'flex items-center space-x-3';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = todo.completed;
+                checkbox.className = 'form-checkbox h-5 w-5 text-blue-500';
+                checkbox.addEventListener('change', () => {
+                    TodoManager.toggleTodo(todo.id);
+                    li.classList.toggle('completed');
+                });
+                
+                const textSpan = document.createElement('span');
+                textSpan.className = 'todo-text';
+                textSpan.textContent = todo.text;
+                
+                const editInput = document.createElement('input');
+                editInput.type = 'text';
+                editInput.className = 'edit-input border rounded px-2 py-1';
+                editInput.value = todo.text;
+                
+                const rightDiv = document.createElement('div');
+                rightDiv.className = 'space-x-2';
+                
+                const editButton = document.createElement('button');
+                editButton.className = 'px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600';
+                editButton.textContent = 'Éditer';
+                editButton.addEventListener('click', () => {
+                    if (li.classList.contains('editing')) {
+                        const newText = editInput.value.trim();
+                        if (newText) {
+                            TodoManager.updateTodo(todo.id, newText);
+                            textSpan.textContent = newText;
+                        }
+                    }
+                    li.classList.toggle('editing');
+                });
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600';
+                deleteButton.textContent = 'Supprimer';
+                deleteButton.addEventListener('click', () => {
+                    TodoManager.deleteTodo(todo.id);
+                    li.remove();
+                });
+                
+                leftDiv.appendChild(checkbox);
+                leftDiv.appendChild(textSpan);
+                leftDiv.appendChild(editInput);
+                
+                rightDiv.appendChild(editButton);
+                rightDiv.appendChild(deleteButton);
+                
+                li.appendChild(leftDiv);
+                li.appendChild(rightDiv);
+                
+                this.todoList.appendChild(li);
+            },
+            
+            renderTodos() {
+                TodoManager.todos.forEach(todo => this.createTodoElement(todo));
+            },
+            
+            filterTodos(filter) {
+                const todos = document.querySelectorAll('.todo-item');
+                todos.forEach(todo => {
+                    const completed = todo.classList.contains('completed');
+                    switch(filter) {
+                        case 'all':
+                            todo.classList.remove('hidden');
+                            break;
+                        case 'active':
+                            todo.classList.toggle('hidden', completed);
+                            break;
+                        case 'completed':
+                            todo.classList.toggle('hidden', !completed);
+                            break;
+                    }
+                });
+            }
+        };
+
+        // Initialize the application
+        UI.init();
+    </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>modal-box - Challenge JavaScript</title>
+    <title>modal-box - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
 </head>
@@ -12,9 +12,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Créer une boîte modale qui s'affiche et se ferme avec un bouton</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Create a modal box that shows and hides with a button</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -24,7 +24,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez un bouton qui affiche une boîte modale. Ajoutez un autre bouton dans la boîte pour la fermer.
+                Add a button that displays a modal box. Add another button in the box to close it.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -50,19 +50,19 @@ modalBox.addEventListener('click', (e) => {
                 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div id="modalBox" class="hidden fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                    <h3 class="text-xl font-semibold mb-4">Ma Boîte Modale</h3>
+                    <h3 class="text-xl font-semibold mb-4">My Modal Box</h3>
                     <p class="text-gray-700 mb-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, incidunt illo corporis fugit architecto nemo! Quos inventore voluptatibus hic iusto.</p>
                     <button id="modalCloseButton" class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                        Fermer
+                        Close
                     </button>
                 </div>
             </div>
             <div class="bg-gray-100 p-8 rounded-lg text-center">
                 <button id="boxButton" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                    Ouvrir la boîte
+                    Open Modal
                 </button>
             </div>
         </div>

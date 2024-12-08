@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mouse-position - Challenge JavaScript</title>
+    <title>mouse-position - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
 </head>
@@ -12,9 +12,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Afficher la position de la souris en temps réel</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Display mouse position in real time</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -24,7 +24,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Affichez les coordonnées X et Y de la souris lorsqu'elle se déplace sur la page.
+                Display the X and Y coordinates of the mouse as it moves across the page.
             </p>
 
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -39,12 +39,12 @@ document.addEventListener('mousemove', function(event) {
                 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg text-center">
                 <div id="mousePosition" class="text-lg font-semibold text-gray-800">
-                    Coordonnées de la souris :
-                    <p>X<span id="mouseX">0</span></p>
-                    <p>Y<span id="mouseY">0</span></p>
+                    Mouse coordinates:
+                    <p>X: <span id="mouseX">0</span></p>
+                    <p>Y: <span id="mouseY">0</span></p>
                 </div>
             </div>
         </div>
@@ -59,8 +59,6 @@ document.addEventListener('mousemove', function(event) {
             
             document.getElementById('mouseX').textContent = mouseX;
             document.getElementById('mouseY').textContent = mouseY;
-
-            
         });
     </script>
 </body>

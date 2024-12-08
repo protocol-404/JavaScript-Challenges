@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dynamic-content - Challenge JavaScript</title>
+    <title>dynamic-content - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -56,9 +56,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Charger dynamiquement du contenu HTML</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Dynamic Content Loading</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -68,7 +68,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez une fonctionnalité pour charger un fichier HTML externe dynamiquement.
+                Create a dynamic content loader that fetches and displays data with loading states and error handling.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -102,19 +102,19 @@ const ContentManager = {
             let content;
             if (this.contentCache.has(tabId)) {
                 content = this.contentCache.get(tabId);
-                UI.logAction(`Contenu chargé depuis le cache: ${tabId}`);
+                UI.logAction(`Content loaded from cache: ${tabId}`);
             } else {
                 content = await this.fetchContent(tabId);
                 this.contentCache.set(tabId, content);
-                UI.logAction(`Nouveau contenu chargé: ${tabId}`);
+                UI.logAction(`New content loaded: ${tabId}`);
             }
             
             UI.displayContent(content);
             this.currentTab = tabId;
             
         } catch (error) {
-            UI.displayError('Erreur lors du chargement du contenu');
-            UI.logAction(`Erreur: ${error.message}`);
+            UI.displayError('Error loading content');
+            UI.logAction(`Error: ${error.message}`);
         }
     },
     
@@ -210,18 +210,18 @@ const UI = {
 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
-                <div class="max-w-xl mx-auto">
+                <div class="max-w-3xl mx-auto">
                     <!-- Tab Navigation -->
                     <div class="flex space-x-4 mb-6">
                         <button data-tab="home" 
                                 class="tab px-4 py-2 rounded-lg font-medium">
-                            Accueil
+                            Home
                         </button>
                         <button data-tab="about" 
                                 class="tab px-4 py-2 rounded-lg font-medium">
-                            À propos
+                            About
                         </button>
                         <button data-tab="contact" 
                                 class="tab px-4 py-2 rounded-lg font-medium">
@@ -244,7 +244,7 @@ const UI = {
                     
                     <!-- Action Log -->
                     <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h3 class="text-lg font-semibold mb-4">Journal des actions</h3>
+                        <h3 class="text-lg font-semibold mb-4">Action Log</h3>
                         <div id="actionLog" class="space-y-2"></div>
                     </div>
                 </div>
@@ -284,55 +284,55 @@ const UI = {
                     let content;
                     if (this.contentCache.has(tabId)) {
                         content = this.contentCache.get(tabId);
-                        UI.logAction(`Contenu chargé depuis le cache: ${tabId}`);
+                        UI.logAction(`Content loaded from cache: ${tabId}`);
                     } else {
                         // For demo, we'll use hardcoded content
                         content = this.getDemoContent(tabId);
                         this.contentCache.set(tabId, content);
-                        UI.logAction(`Nouveau contenu chargé: ${tabId}`);
+                        UI.logAction(`New content loaded: ${tabId}`);
                     }
                     
                     UI.displayContent(content);
                     this.currentTab = tabId;
                     
                 } catch (error) {
-                    UI.displayError('Erreur lors du chargement du contenu');
-                    UI.logAction(`Erreur: ${error.message}`);
+                    UI.displayError('Error loading content');
+                    UI.logAction(`Error: ${error.message}`);
                 }
             },
             
             getDemoContent(tabId) {
                 const content = {
                     home: `
-                        <h2 class="text-2xl font-bold mb-4">Bienvenue sur notre site</h2>
+                        <h2 class="text-2xl font-bold mb-4">Welcome to our site</h2>
                         <p class="text-gray-700 mb-4">
-                            Ceci est un exemple de contenu chargé dynamiquement pour la page d'accueil.
-                            Le contenu est mis en cache après le premier chargement.
+                            This is an example of dynamic content loading for the home page.
+                            The content is cached after the first load.
                         </p>
                         <div class="bg-blue-100 p-4 rounded-lg">
                             <p class="text-blue-800">
-                                Essayez de naviguer entre les onglets pour voir le chargement dynamique en action !
+                                Try navigating between the tabs to see dynamic loading in action!
                             </p>
                         </div>
                     `,
                     about: `
-                        <h2 class="text-2xl font-bold mb-4">À propos de nous</h2>
+                        <h2 class="text-2xl font-bold mb-4">About us</h2>
                         <p class="text-gray-700 mb-4">
-                            Cette page démontre comment charger du contenu HTML dynamiquement.
-                            Le contenu peut être chargé depuis un serveur ou, comme dans cet exemple, depuis un cache local.
+                            This page demonstrates how to load HTML content dynamically.
+                            The content can be loaded from a server or, as in this example, from a local cache.
                         </p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li>Chargement asynchrone</li>
-                            <li>Mise en cache du contenu</li>
-                            <li>Animations de transition</li>
-                            <li>Gestion des erreurs</li>
+                            <li>Asynchronous loading</li>
+                            <li>Content caching</li>
+                            <li>Transition animations</li>
+                            <li>Error handling</li>
                         </ul>
                     `,
                     contact: `
-                        <h2 class="text-2xl font-bold mb-4">Contactez-nous</h2>
+                        <h2 class="text-2xl font-bold mb-4">Contact us</h2>
                         <form class="space-y-4">
                             <div>
-                                <label class="block text-gray-700 mb-2">Nom</label>
+                                <label class="block text-gray-700 mb-2">Name</label>
                                 <input type="text" class="w-full px-4 py-2 border rounded-lg">
                             </div>
                             <div>
@@ -344,13 +344,13 @@ const UI = {
                                 <textarea class="w-full px-4 py-2 border rounded-lg" rows="4"></textarea>
                             </div>
                             <button type="button" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                                Envoyer
+                                Send
                             </button>
                         </form>
                     `
                 };
                 
-                return content[tabId] || '<p class="text-red-500">Contenu non trouvé</p>';
+                return content[tabId] || '<p class="text-red-500">Content not found</p>';
             }
         };
 

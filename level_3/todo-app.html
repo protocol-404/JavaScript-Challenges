@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>todo-app - Challenge JavaScript</title>
+    <title>todo-app - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -33,9 +33,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Application Todo List</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Todo Application</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -45,7 +45,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Créez une application de liste de tâches avec stockage local, filtres et édition.
+                Create a todo application with features like adding, completing, and deleting tasks. Tasks should persist in local storage.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -164,7 +164,7 @@ const UI = {
         
         const editButton = document.createElement('button');
         editButton.className = 'px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600';
-        editButton.textContent = 'Éditer';
+        editButton.textContent = 'Edit';
         editButton.addEventListener('click', () => {
             if (li.classList.contains('editing')) {
                 const newText = editInput.value.trim();
@@ -178,7 +178,7 @@ const UI = {
         
         const deleteButton = document.createElement('button');
         deleteButton.className = 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600';
-        deleteButton.textContent = 'Supprimer';
+        deleteButton.textContent = 'Delete';
         deleteButton.addEventListener('click', () => {
             TodoManager.deleteTodo(todo.id);
             li.remove();
@@ -221,7 +221,7 @@ const UI = {
 };</code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-xl mx-auto">
                     <!-- Formulaire d'ajout -->
@@ -230,10 +230,10 @@ const UI = {
                             <input type="text" 
                                    id="todoInput" 
                                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   placeholder="Ajouter une tâche...">
+                                   placeholder="Add a new task...">
                             <button type="submit" 
                                     class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                                Ajouter
+                                Add Task
                             </button>
                         </div>
                     </form>
@@ -241,13 +241,13 @@ const UI = {
                     <!-- Filtres -->
                     <div class="flex justify-center space-x-2 mb-6">
                         <button class="filter-btn px-4 py-2 bg-blue-500 text-white rounded" data-filter="all">
-                            Tout
+                            All
                         </button>
                         <button class="filter-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" data-filter="active">
-                            Actif
+                            Active
                         </button>
                         <button class="filter-btn px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" data-filter="completed">
-                            Terminé
+                            Completed
                         </button>
                     </div>
                     
@@ -372,7 +372,7 @@ const UI = {
                 
                 const editButton = document.createElement('button');
                 editButton.className = 'px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600';
-                editButton.textContent = 'Éditer';
+                editButton.textContent = 'Edit';
                 editButton.addEventListener('click', () => {
                     if (li.classList.contains('editing')) {
                         const newText = editInput.value.trim();
@@ -386,7 +386,7 @@ const UI = {
                 
                 const deleteButton = document.createElement('button');
                 deleteButton.className = 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600';
-                deleteButton.textContent = 'Supprimer';
+                deleteButton.textContent = 'Delete';
                 deleteButton.addEventListener('click', () => {
                     TodoManager.deleteTodo(todo.id);
                     li.remove();

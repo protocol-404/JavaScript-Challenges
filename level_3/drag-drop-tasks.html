@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>drag-drop-tasks - Challenge JavaScript</title>
+    <title>drag-drop-tasks - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -38,9 +38,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Réorganiser les tâches par glisser-déposer</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Task Management with Drag and Drop</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -50,7 +50,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez une fonctionnalité de glisser-déposer pour organiser les tâches dans une Todo List.
+                Create a task management system with drag and drop functionality. Users can create, organize, and prioritize tasks across different status columns.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -62,9 +62,9 @@ const TaskManager = {
     init() {
         const savedTasks = localStorage.getItem('dragDropTasks');
         this.tasks = savedTasks ? JSON.parse(savedTasks) : [
-            { id: 1, text: 'Première tâche', completed: false },
-            { id: 2, text: 'Deuxième tâche', completed: false },
-            { id: 3, text: 'Troisième tâche', completed: true }
+            { id: 1, text: 'First task', completed: false },
+            { id: 2, text: 'Second task', completed: false },
+            { id: 3, text: 'Third task', completed: true }
         ];
         this.save();
     },
@@ -211,7 +211,7 @@ const UI = {
 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-xl mx-auto">
                     <!-- Formulaire d'ajout -->
@@ -220,10 +220,10 @@ const UI = {
                             <input type="text" 
                                    id="taskInput" 
                                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   placeholder="Ajouter une tâche...">
+                                   placeholder="Add a task...">
                             <button type="submit" 
                                     class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                                Ajouter
+                                Add
                             </button>
                         </div>
                     </form>
@@ -242,9 +242,9 @@ const UI = {
             init() {
                 const savedTasks = localStorage.getItem('dragDropTasks');
                 this.tasks = savedTasks ? JSON.parse(savedTasks) : [
-                    { id: 1, text: 'Première tâche', completed: false },
-                    { id: 2, text: 'Deuxième tâche', completed: false },
-                    { id: 3, text: 'Troisième tâche', completed: true }
+                    { id: 1, text: 'First task', completed: false },
+                    { id: 2, text: 'Second task', completed: false },
+                    { id: 3, text: 'Third task', completed: true }
                 ];
                 this.save();
             },

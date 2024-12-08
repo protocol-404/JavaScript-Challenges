@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>game - Challenge JavaScript</title>
+    <title>game - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -80,9 +80,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Pierre-Papier-Ciseaux</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Rock Paper Scissors</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -92,7 +92,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Créez un jeu interactif comme Pierre-Papier-Ciseaux.
+                Create an interactive game like Rock Paper Scissors.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -101,7 +101,7 @@
 const GameManager = {
     playerScore: 0,
     computerScore: 0,
-    choices: ['pierre', 'papier', 'ciseaux'],
+    choices: ['rock', 'paper', 'scissors'],
     history: [],
     maxHistory: 5,
     
@@ -134,9 +134,9 @@ const GameManager = {
     
     getEmoji(choice) {
         const emojis = {
-            pierre: '✊',
-            papier: '✋',
-            ciseaux: '✌️'
+            rock: '✊',
+            paper: '✋',
+            scissors: '✌️'
         };
         return emojis[choice];
     },
@@ -152,15 +152,15 @@ const GameManager = {
     },
     
     getResult(player, computer) {
-        if (player === computer) return 'égalité';
+        if (player === computer) return 'tie';
         
         const wins = {
-            pierre: 'ciseaux',
-            papier: 'pierre',
-            ciseaux: 'papier'
+            rock: 'scissors',
+            paper: 'rock',
+            scissors: 'paper'
         };
         
-        return wins[player] === computer ? 'gagné' : 'perdu';
+        return wins[player] === computer ? 'win' : 'lose';
     },
     
     updateChoices(player, computer) {
@@ -180,21 +180,21 @@ const GameManager = {
     updateResult(result) {
         const resultDisplay = document.getElementById('result');
         const messages = {
-            gagné: 'Vous avez gagné ! 🎉',
-            perdu: 'Vous avez perdu ! 😢',
-            égalité: 'Égalité ! 🤝'
+            win: 'You win! 🎉',
+            lose: 'You lose! 😢',
+            tie: 'Tie! 🤝'
         };
         
         resultDisplay.textContent = messages[result];
         resultDisplay.className = `text-xl font-bold mb-4 ${
-            result === 'gagné' ? 'text-green-500' :
-            result === 'perdu' ? 'text-red-500' : 'text-gray-500'
+            result === 'win' ? 'text-green-500' :
+            result === 'lose' ? 'text-red-500' : 'text-gray-500'
         } result-animation`;
     },
     
     updateScore(result) {
-        if (result === 'gagné') this.playerScore++;
-        if (result === 'perdu') this.computerScore++;
+        if (result === 'win') this.playerScore++;
+        if (result === 'lose') this.computerScore++;
         
         const playerScoreEl = document.getElementById('playerScore');
         const computerScoreEl = document.getElementById('computerScore');
@@ -203,8 +203,8 @@ const GameManager = {
         computerScoreEl.textContent = this.computerScore;
         
         if (result) {
-            const scoreEl = result === 'gagné' ? playerScoreEl : 
-                          result === 'perdu' ? computerScoreEl : null;
+            const scoreEl = result === 'win' ? playerScoreEl : 
+                          result === 'lose' ? computerScoreEl : null;
             
             if (scoreEl) {
                 scoreEl.classList.remove('score-change');
@@ -239,8 +239,8 @@ const GameManager = {
         
         const resultText = document.createElement('span');
         resultText.className = `font-medium ${
-            result === 'gagné' ? 'text-green-500' :
-            result === 'perdu' ? 'text-red-500' : 'text-gray-500'
+            result === 'win' ? 'text-green-500' :
+            result === 'lose' ? 'text-red-500' : 'text-gray-500'
         }`;
         resultText.textContent = result.charAt(0).toUpperCase() + result.slice(1);
         
@@ -257,7 +257,7 @@ const GameManager = {
 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-2xl mx-auto">
                     <!-- Game Container -->
@@ -265,12 +265,12 @@ const GameManager = {
                         <!-- Score -->
                         <div class="flex justify-center items-center space-x-8 mb-8">
                             <div class="text-center">
-                                <div class="text-lg font-medium text-gray-700 mb-2">Vous</div>
+                                <div class="text-lg font-medium text-gray-700 mb-2">You</div>
                                 <div id="playerScore" class="text-4xl font-bold text-blue-500">0</div>
                             </div>
                             <div class="text-4xl font-bold text-gray-400">-</div>
                             <div class="text-center">
-                                <div class="text-lg font-medium text-gray-700 mb-2">Ordinateur</div>
+                                <div class="text-lg font-medium text-gray-700 mb-2">Computer</div>
                                 <div id="computerScore" class="text-4xl font-bold text-blue-500">0</div>
                             </div>
                         </div>
@@ -286,7 +286,7 @@ const GameManager = {
                             
                             <!-- Result -->
                             <div id="result" class="text-xl font-bold mb-8 text-gray-500">
-                                Choisissez votre coup !
+                                Choose your move!
                             </div>
                             
                             <!-- Choice Buttons -->
@@ -295,7 +295,7 @@ const GameManager = {
                         
                         <!-- History -->
                         <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-semibold mb-4">Historique</h3>
+                            <h3 class="text-lg font-semibold mb-4">History</h3>
                             <div id="history" class="space-y-2"></div>
                         </div>
                     </div>
@@ -308,7 +308,7 @@ const GameManager = {
         const GameManager = {
             playerScore: 0,
             computerScore: 0,
-            choices: ['pierre', 'papier', 'ciseaux'],
+            choices: ['rock', 'paper', 'scissors'],
             history: [],
             maxHistory: 5,
             
@@ -341,9 +341,9 @@ const GameManager = {
             
             getEmoji(choice) {
                 const emojis = {
-                    pierre: '✊',
-                    papier: '✋',
-                    ciseaux: '✌️'
+                    rock: '✊',
+                    paper: '✋',
+                    scissors: '✌️'
                 };
                 return emojis[choice];
             },
@@ -359,15 +359,15 @@ const GameManager = {
             },
             
             getResult(player, computer) {
-                if (player === computer) return 'égalité';
+                if (player === computer) return 'tie';
                 
                 const wins = {
-                    pierre: 'ciseaux',
-                    papier: 'pierre',
-                    ciseaux: 'papier'
+                    rock: 'scissors',
+                    paper: 'rock',
+                    scissors: 'paper'
                 };
                 
-                return wins[player] === computer ? 'gagné' : 'perdu';
+                return wins[player] === computer ? 'win' : 'lose';
             },
             
             updateChoices(player, computer) {
@@ -387,21 +387,21 @@ const GameManager = {
             updateResult(result) {
                 const resultDisplay = document.getElementById('result');
                 const messages = {
-                    gagné: 'Vous avez gagné ! 🎉',
-                    perdu: 'Vous avez perdu ! 😢',
-                    égalité: 'Égalité ! 🤝'
+                    win: 'You win! 🎉',
+                    lose: 'You lose! 😢',
+                    tie: 'Tie! 🤝'
                 };
                 
                 resultDisplay.textContent = messages[result];
                 resultDisplay.className = `text-xl font-bold mb-4 ${
-                    result === 'gagné' ? 'text-green-500' :
-                    result === 'perdu' ? 'text-red-500' : 'text-gray-500'
+                    result === 'win' ? 'text-green-500' :
+                    result === 'lose' ? 'text-red-500' : 'text-gray-500'
                 } result-animation`;
             },
             
             updateScore(result) {
-                if (result === 'gagné') this.playerScore++;
-                if (result === 'perdu') this.computerScore++;
+                if (result === 'win') this.playerScore++;
+                if (result === 'lose') this.computerScore++;
                 
                 const playerScoreEl = document.getElementById('playerScore');
                 const computerScoreEl = document.getElementById('computerScore');
@@ -410,8 +410,8 @@ const GameManager = {
                 computerScoreEl.textContent = this.computerScore;
                 
                 if (result) {
-                    const scoreEl = result === 'gagné' ? playerScoreEl : 
-                                  result === 'perdu' ? computerScoreEl : null;
+                    const scoreEl = result === 'win' ? playerScoreEl : 
+                                  result === 'lose' ? computerScoreEl : null;
                     
                     if (scoreEl) {
                         scoreEl.classList.remove('score-change');
@@ -446,8 +446,8 @@ const GameManager = {
                 
                 const resultText = document.createElement('span');
                 resultText.className = `font-medium ${
-                    result === 'gagné' ? 'text-green-500' :
-                    result === 'perdu' ? 'text-red-500' : 'text-gray-500'
+                    result === 'win' ? 'text-green-500' :
+                    result === 'lose' ? 'text-red-500' : 'text-gray-500'
                 }`;
                 resultText.textContent = result.charAt(0).toUpperCase() + result.slice(1);
                 

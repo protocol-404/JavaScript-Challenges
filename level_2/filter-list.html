@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>filter-list - Challenge JavaScript</title>
+    <title>filter-list - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -29,9 +29,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Filtrer les éléments d'une liste</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Filter list items</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -41,7 +41,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Permettez de filtrer les éléments selon une saisie utilisateur.
+                Filter items based on user input.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -64,7 +64,7 @@ function filterItems() {
         
         item.classList.toggle('hidden-item', !matches);
         
-        // Mise en évidence du texte correspondant
+        // Highlight matching text
         if (matches) {
             hasVisibleItems = true;
             if (searchTerm) {
@@ -84,7 +84,7 @@ function filterItems() {
 }</code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-xl mx-auto">
                     <!-- Search Input -->
@@ -92,22 +92,22 @@ function filterItems() {
                         <input type="text" 
                                id="searchInput" 
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                               placeholder="Rechercher un élément...">
+                               placeholder="Search for an item...">
                     </div>
                     
                     <!-- Items List -->
                     <ul id="itemsList" class="space-y-2">
-                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Aziz benmalouk</li>
-                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Aziz formateur</li>
-                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">ousama oujaber</li>
-                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">test</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">John Smith</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Jane Doe</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Robert Johnson</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Test Item</li>
                         <li class="list-item p-3 bg-white rounded-lg shadow-sm">JavaScript</li>
-                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">YouCode</li>
-                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Looooooooll</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Web Development</li>
+                        <li class="list-item p-3 bg-white rounded-lg shadow-sm">Programming</li>
                     </ul>
 
                     <div id="noResults" class="text-center py-4 text-gray-500 hidden">
-                        Aucun résultat trouvé
+                        No results found
                     </div>
                 </div>
             </div>

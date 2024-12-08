@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>progress-bar - Challenge JavaScript</title>
+    <title>progress-bar - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -27,9 +27,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Barre de progression dynamique</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Dynamic Progress Bar</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -39,7 +39,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez une barre de progression qui se remplit selon une action utilisateur.
+                Add a progress bar that fills up based on user action.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -59,7 +59,7 @@ incrementBtn.addEventListener('click', () => {
         if (progress === 100) {
             progressBar.classList.remove('bg-blue-500');
             progressBar.classList.add('bg-green-500');
-            progressText.textContent = 'Terminé !';
+            progressText.textContent = 'Complete!';
             progressText.classList.add('text-green-500');
             incrementBtn.disabled = true;
             incrementBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -86,7 +86,7 @@ function updateProgress() {
                 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-xl mx-auto">
                     <!-- Progress Container -->
@@ -105,7 +105,7 @@ function updateProgress() {
                             +10%
                         </button>
                         <button id="resetBtn" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
-                            Réinitialiser
+                            Reset
                         </button>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ function updateProgress() {
                 if (progress === 100) {
                     progressBar.classList.remove('bg-blue-500');
                     progressBar.classList.add('bg-green-500');
-                    progressText.textContent = 'Terminé !';
+                    progressText.textContent = 'Complete!';
                     progressText.classList.add('text-green-500');
                     incrementBtn.disabled = true;
                     incrementBtn.classList.add('opacity-50', 'cursor-not-allowed');

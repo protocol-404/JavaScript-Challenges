@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>delete-items - Challenge JavaScript</title>
+    <title>delete-items - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
 </head>
@@ -12,9 +12,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Supprimer des éléments d'une liste</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Delete items from a list</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -24,14 +24,14 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez un bouton pour supprimer des éléments spécifiques d'une liste.
+                Add a button to delete specific items from a list.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
             <div class="bg-gray-100 p-4 rounded-lg mb-6">
                 <pre><code class="language-javascript">
 const itemList = document.getElementById('itemList');
-const items = ['Élément 1', 'Élément 2', 'Élément 3', 'Élément 4'];
+const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
 
 function createListItem(text) {
     const li = document.createElement('li');
@@ -42,7 +42,7 @@ function createListItem(text) {
     li.appendChild(textSpan);
     
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Supprimer';
+    deleteButton.textContent = 'Delete';
     deleteButton.className = 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600';
     deleteButton.onclick = () => li.remove();
     li.appendChild(deleteButton);
@@ -55,7 +55,7 @@ items.forEach(item => {
 });</code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <ul id="itemList" class="space-y-2"></ul>
             </div>
@@ -64,7 +64,7 @@ items.forEach(item => {
 
     <script>
         const itemList = document.getElementById('itemList');
-        const items = ['Élément 1', 'Élément 2', 'Élément 3', 'Élément 4'];
+        const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
 
         function createListItem(text) {
             const li = document.createElement('li');
@@ -75,7 +75,7 @@ items.forEach(item => {
             li.appendChild(textSpan);
             
             const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Supprimer';
+            deleteButton.textContent = 'Delete';
             deleteButton.className = 'px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600';
             deleteButton.onclick = () => li.remove();
             li.appendChild(deleteButton);

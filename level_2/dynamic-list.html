@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dynamic-list - Challenge JavaScript</title>
+    <title>dynamic-list - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
 </head>
@@ -12,9 +12,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Créer une liste d'éléments dynamique</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Create a dynamic list of items</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -24,7 +24,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Permettez à l'utilisateur d'ajouter et de supprimer des éléments d'une liste en utilisant un formulaire.
+                Allow users to add and remove items from a list using a form.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -59,12 +59,12 @@ addButton.addEventListener('click', () => {
                 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
                 <div class="flex gap-2 mb-4">
-                    <input type="text" id="itemInput" class="flex-1 border border-gray-300 rounded-lg px-4 py-2" placeholder="Nouvel élément">
+                    <input type="text" id="itemInput" class="flex-1 border border-gray-300 rounded-lg px-4 py-2" placeholder="New item">
                     <button id="addButton" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                        Ajouter
+                        Add
                     </button>
                 </div>
                 <ul id="itemList" class="text-left"></ul>
@@ -73,7 +73,6 @@ addButton.addEventListener('click', () => {
     </main>
 
     <script>
-        // Le code JavaScript sera exécuté ici
         const itemInput = document.getElementById('itemInput');
         const addButton = document.getElementById('addButton');
         const itemList = document.getElementById('itemList');

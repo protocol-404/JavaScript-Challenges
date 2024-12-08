@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>media-player - Challenge JavaScript</title>
+    <title>media-player - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -44,9 +44,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Lecteur audio/vidéo simple</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Simple Audio/Video Player</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -56,7 +56,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez un lecteur avec des contrôles basiques pour lire des médias.
+                Add a player with basic controls to play media.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -107,27 +107,27 @@ function setVolume() {
 }</code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-xl mx-auto">
-                    <!-- Lecteur Vidéo -->
+                    <!-- Video Player -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4">Lecteur Vidéo</h3>
+                        <h3 class="text-lg font-semibold mb-4">Video Player</h3>
                         <video id="mediaPlayer" class="w-full rounded-lg mb-4">
                             <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                            Votre navigateur ne supporte pas la lecture vidéo.
+                            Your browser does not support video playback.
                         </video>
                         
-                        <!-- Contrôles -->
+                        <!-- Controls -->
                         <div class="space-y-4">
-                            <!-- Barre de progression -->
+                            <!-- Progress Bar -->
                             <input type="range" id="progressBar" class="custom-range" value="0" step="0.1">
                             
-                            <!-- Temps -->
+                            <!-- Time -->
                             <div class="flex justify-between items-center">
                                 <span id="timeDisplay" class="text-sm text-gray-600">0:00 / 0:00</span>
                                 
-                                <!-- Contrôles principaux -->
+                                <!-- Main Controls -->
                                 <div class="flex items-center space-x-4">
                                     <button id="playButton" class="control-button text-2xl">▶️</button>
                                     

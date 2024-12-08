@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pagination - Challenge JavaScript</title>
+    <title>pagination - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -25,9 +25,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Système de pagination</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Pagination System</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -37,7 +37,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Créez une liste paginée pour gérer un grand nombre d'éléments.
+                Create a paginated list to manage a large number of items.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -66,8 +66,8 @@ function updatePagination() {
     const paginationContainer = document.getElementById('pagination');
     paginationContainer.innerHTML = '';
     
-    // Bouton précédent
-    const prevButton = createPageButton('Précédent', () => {
+    // Previous button
+    const prevButton = createPageButton('Previous', () => {
         if (currentPage > 1) {
             currentPage--;
             updateDisplay();
@@ -76,7 +76,7 @@ function updatePagination() {
     prevButton.classList.toggle('opacity-50', currentPage === 1);
     paginationContainer.appendChild(prevButton);
     
-    // Boutons des pages
+    // Page buttons
     for (let i = 1; i <= totalPages; i++) {
         const pageButton = createPageButton(i, () => {
             currentPage = i;
@@ -88,8 +88,8 @@ function updatePagination() {
         paginationContainer.appendChild(pageButton);
     }
     
-    // Bouton suivant
-    const nextButton = createPageButton('Suivant', () => {
+    // Next button
+    const nextButton = createPageButton('Next', () => {
         if (currentPage < totalPages) {
             currentPage++;
             updateDisplay();
@@ -113,26 +113,26 @@ function updateDisplay() {
 }</code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-xl mx-auto">
-                    <!-- Liste des éléments -->
+                    <!-- List of items -->
                     <ul id="itemsList" class="space-y-2 mb-6">
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 1</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 2</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 3</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 4</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 5</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 6</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 7</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 8</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 9</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 10</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 11</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 12</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 13</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 14</li>
-                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Élément 15</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 1</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 2</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 3</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 4</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 5</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 6</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 7</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 8</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 9</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 10</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 11</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 12</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 13</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 14</li>
+                        <li class="page-item p-3 bg-white rounded-lg shadow-sm">Item 15</li>
                     </ul>
                     
                     <div id="pagination" class="flex justify-center items-center space-x-2"></div>
@@ -165,7 +165,7 @@ function updateDisplay() {
             const paginationContainer = document.getElementById('pagination');
             paginationContainer.innerHTML = '';
             
-            const prevButton = createPageButton('Précédent', () => {
+            const prevButton = createPageButton('Previous', () => {
                 if (currentPage > 1) {
                     currentPage--;
                     updateDisplay();
@@ -185,7 +185,7 @@ function updateDisplay() {
                 paginationContainer.appendChild(pageButton);
             }
             
-            const nextButton = createPageButton('Suivant', () => {
+            const nextButton = createPageButton('Next', () => {
                 if (currentPage < totalPages) {
                     currentPage++;
                     updateDisplay();

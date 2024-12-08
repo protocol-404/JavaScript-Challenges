@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>carousel - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            border-radius: 0.5rem;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        
+        .carousel-slide {
+            flex: 0 0 100%;
+            position: relative;
+        }
+        
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-slide.active .carousel-caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+        
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+        
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-container:hover .carousel-button {
+            opacity: 1;
+        }
+        
+        .carousel-button:hover {
+            background-color: white;
+        }
+        
+        .carousel-button.prev {
+            left: 1rem;
+        }
+        
+        .carousel-button.next {
+            right: 1rem;
+        }
+        
+        .carousel-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background-color: #3B82F6;
+            transition: width 0.1s linear;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Créer un carrousel d'images</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Ajoutez un carrousel avec navigation automatique et manuelle.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
+                <pre><code class="language-javascript">
+const CarouselManager = {
+    currentSlide: 0,
+    autoplayInterval: 5000,
+    progressInterval: 50,
+    progress: 0,
+    autoplayTimer: null,
+    progressTimer: null,
+    isAutoplayPaused: false,
+    
+    init() {
+        this.setupEventListeners();
+        this.startAutoplay();
+        this.updateSlide();
+    },
+    
+    setupEventListeners() {
+        document.querySelector('.prev').addEventListener('click', () => this.prevSlide());
+        document.querySelector('.next').addEventListener('click', () => this.nextSlide());
+        
+        document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => this.goToSlide(index));
+        });
+        
+        const container = document.querySelector('.carousel-container');
+        container.addEventListener('mouseenter', () => this.pauseAutoplay());
+        container.addEventListener('mouseleave', () => this.resumeAutoplay());
+        
+        // Touch events
+        let touchStartX = 0;
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            this.pauseAutoplay();
+        });
+        
+        container.addEventListener('touchmove', (e) => {
+            if (!touchStartX) return;
+            
+            const touchEndX = e.touches[0].clientX;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    this.nextSlide();
+                } else {
+                    this.prevSlide();
+                }
+                touchStartX = 0;
+            }
+        });
+        
+        container.addEventListener('touchend', () => {
+            touchStartX = 0;
+            this.resumeAutoplay();
+        });
+    },
+    
+    updateSlide() {
+        const track = document.querySelector('.carousel-track');
+        track.style.transform = `translateX(-${this.currentSlide * 100}%)`;
+        
+        document.querySelectorAll('.carousel-slide').forEach((slide, index) => {
+            if (index === this.currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        
+        document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+            if (index === this.currentSlide) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    },
+    
+    nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % 4;
+        this.updateSlide();
+        this.resetProgress();
+    },
+    
+    prevSlide() {
+        this.currentSlide = (this.currentSlide - 1 + 4) % 4;
+        this.updateSlide();
+        this.resetProgress();
+    },
+    
+    goToSlide(index) {
+        this.currentSlide = index;
+        this.updateSlide();
+        this.resetProgress();
+    },
+    
+    startAutoplay() {
+        this.autoplayTimer = setInterval(() => this.nextSlide(), this.autoplayInterval);
+        this.startProgress();
+    },
+    
+    pauseAutoplay() {
+        this.isAutoplayPaused = true;
+        clearInterval(this.autoplayTimer);
+        clearInterval(this.progressTimer);
+    },
+    
+    resumeAutoplay() {
+        if (this.isAutoplayPaused) {
+            this.isAutoplayPaused = false;
+            this.startAutoplay();
+        }
+    },
+    
+    startProgress() {
+        this.progress = 0;
+        const progressBar = document.querySelector('.carousel-progress');
+        
+        this.progressTimer = setInterval(() => {
+            this.progress += (this.progressInterval / this.autoplayInterval) * 100;
+            progressBar.style.width = `${this.progress}%`;
+        }, this.progressInterval);
+    },
+    
+    resetProgress() {
+        this.progress = 0;
+        document.querySelector('.carousel-progress').style.width = '0%';
+        
+        if (!this.isAutoplayPaused) {
+            clearInterval(this.autoplayTimer);
+            clearInterval(this.progressTimer);
+            this.startAutoplay();
+        }
+    }
+};
+</code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-3xl mx-auto">
+                    <div class="carousel-container shadow-xl">
+                        <!-- Progress Bar -->
+                        <div class="carousel-progress"></div>
+                        
+                        <!-- Navigation Buttons -->
+                        <button class="carousel-button prev">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button class="carousel-button next">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Carousel Track -->
+                        <div class="carousel-track">
+                            <div class="carousel-slide">
+                                <img src="../assets/central-computer-processor-with-neon-lights-integrated-microchip-circuit-board-server.jpg" alt="Processeur">
+                                <div class="carousel-caption">
+                                    <h3 class="text-lg font-semibold mb-2">Processeur central</h3>
+                                    <p>Circuit intégré avec éclairage néon</p>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="../assets/close-up-image-programer-working-his-desk-office.jpg" alt="Programmeur au bureau">
+                                <div class="carousel-caption">
+                                    <h3 class="text-lg font-semibold mb-2">Programmeur au travail</h3>
+                                    <p>Vue rapprochée d'un développeur</p>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="../assets/professional-programmer-working-late-dark-office.jpg" alt="Programmeur de nuit">
+                                <div class="carousel-caption">
+                                    <h3 class="text-lg font-semibold mb-2">Travail nocturne</h3>
+                                    <p>Programmeur professionnel en soirée</p>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="../assets/rear-view-programmer-working-all-night-long.jpg" alt="Vue arrière programmeur">
+                                <div class="carousel-caption">
+                                    <h3 class="text-lg font-semibold mb-2">Vue de dos</h3>
+                                    <p>Développeur travaillant tard le soir</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Navigation Dots -->
+                        <div class="carousel-nav">
+                            <div class="carousel-dot active"></div>
+                            <div class="carousel-dot"></div>
+                            <div class="carousel-dot"></div>
+                            <div class="carousel-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const CarouselManager = {
+            currentSlide: 0,
+            autoplayInterval: 5000,
+            progressInterval: 50,
+            progress: 0,
+            autoplayTimer: null,
+            progressTimer: null,
+            isAutoplayPaused: false,
+            
+            init() {
+                this.setupEventListeners();
+                this.startAutoplay();
+                this.updateSlide();
+            },
+            
+            setupEventListeners() {
+                document.querySelector('.prev').addEventListener('click', () => this.prevSlide());
+                document.querySelector('.next').addEventListener('click', () => this.nextSlide());
+                
+                document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+                    dot.addEventListener('click', () => this.goToSlide(index));
+                });
+                
+                const container = document.querySelector('.carousel-container');
+                container.addEventListener('mouseenter', () => this.pauseAutoplay());
+                container.addEventListener('mouseleave', () => this.resumeAutoplay());
+                
+                // Touch events
+                let touchStartX = 0;
+                container.addEventListener('touchstart', (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    this.pauseAutoplay();
+                });
+                
+                container.addEventListener('touchmove', (e) => {
+                    if (!touchStartX) return;
+                    
+                    const touchEndX = e.touches[0].clientX;
+                    const diff = touchStartX - touchEndX;
+                    
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                        touchStartX = 0;
+                    }
+                });
+                
+                container.addEventListener('touchend', () => {
+                    touchStartX = 0;
+                    this.resumeAutoplay();
+                });
+            },
+            
+            updateSlide() {
+                const track = document.querySelector('.carousel-track');
+                track.style.transform = `translateX(-${this.currentSlide * 100}%)`;
+                
+                document.querySelectorAll('.carousel-slide').forEach((slide, index) => {
+                    if (index === this.currentSlide) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+                
+                document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+                    if (index === this.currentSlide) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            },
+            
+            nextSlide() {
+                this.currentSlide = (this.currentSlide + 1) % 4;
+                this.updateSlide();
+                this.resetProgress();
+            },
+            
+            prevSlide() {
+                this.currentSlide = (this.currentSlide - 1 + 4) % 4;
+                this.updateSlide();
+                this.resetProgress();
+            },
+            
+            goToSlide(index) {
+                this.currentSlide = index;
+                this.updateSlide();
+                this.resetProgress();
+            },
+            
+            startAutoplay() {
+                this.autoplayTimer = setInterval(() => this.nextSlide(), this.autoplayInterval);
+                this.startProgress();
+            },
+            
+            pauseAutoplay() {
+                this.isAutoplayPaused = true;
+                clearInterval(this.autoplayTimer);
+                clearInterval(this.progressTimer);
+            },
+            
+            resumeAutoplay() {
+                if (this.isAutoplayPaused) {
+                    this.isAutoplayPaused = false;
+                    this.startAutoplay();
+                }
+            },
+            
+            startProgress() {
+                this.progress = 0;
+                const progressBar = document.querySelector('.carousel-progress');
+                
+                this.progressTimer = setInterval(() => {
+                    this.progress += (this.progressInterval / this.autoplayInterval) * 100;
+                    progressBar.style.width = `${this.progress}%`;
+                }, this.progressInterval);
+            },
+            
+            resetProgress() {
+                this.progress = 0;
+                document.querySelector('.carousel-progress').style.width = '0%';
+                
+                if (!this.isAutoplayPaused) {
+                    clearInterval(this.autoplayTimer);
+                    clearInterval(this.progressTimer);
+                    this.startAutoplay();
+                }
+            }
+        };
+
+        // Initialize the application
+        CarouselManager.init();
+    </script>
+</body>
+</html>

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = document.createElement('a');
         link.href = `#level-${level.toLowerCase()}`;
         link.className = 'px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700 whitespace-nowrap';
-        link.textContent = `Niveau ${level}`;
+        link.textContent = `Level ${level}`;
         navItem.appendChild(link);
         nav.appendChild(navItem);
     });
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const title = document.createElement('h2');
         title.className = 'text-2xl font-bold text-gray-800 mb-4';
-        title.textContent = `Niveau: ${level}`;
+        title.textContent = `Level: ${level}`;
         section.appendChild(title);
 
         const grid = document.createElement('div');
@@ -101,9 +101,9 @@ function createChallengeCard(challenge, level) {
     card.addEventListener('click', () => {
         fileExists(challenge.link).then(exists => {
             if (exists) {
-                console.log('The file exists.'+challenge.title);
+                console.log(`The file exists: ${challenge.title}`);
             } else {
-                console.log('The file does not exist.'+challenge.title);
+                console.log(`The file does not exist: ${challenge.title}`);
             }
         });
 

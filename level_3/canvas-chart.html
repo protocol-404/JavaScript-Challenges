@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canvas-chart - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .canvas-container {
+            position: relative;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        #chartCanvas {
+            border-radius: 0.5rem;
+        }
+        
+        .control-panel {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tooltip {
+            position: absolute;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #3B82F6;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-picker {
+            -webkit-appearance: none;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        
+        .color-picker::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        
+        .color-picker::-webkit-color-swatch {
+            border: none;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Créer un graphique avec Canvas</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Ajoutez un graphique simple utilisant l'API Canvas.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
+                <pre><code class="language-javascript">
+const ChartManager = {
+    canvas: null,
+    ctx: null,
+    data: [],
+    barWidth: 60,
+    spacing: 20,
+    maxValue: 100,
+    animationDuration: 1000,
+    startTime: null,
+    barColor: '#3B82F6',
+    tooltip: null,
+    
+    init() {
+        this.canvas = document.getElementById('chartCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.tooltip = document.querySelector('.tooltip');
+        
+        this.data = [
+            { label: 'HTML', value: 85 },
+            { label: 'CSS', value: 75 },
+            { label: 'JavaScript', value: 90 },
+            { label: 'Canvas', value: 65 },
+            { label: 'SVG', value: 70 }
+        ];
+        
+        this.setupEventListeners();
+        this.startAnimation();
+    },
+    
+    setupEventListeners() {
+        // Mouse move for tooltips
+        this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        this.canvas.addEventListener('mouseleave', () => this.hideTooltip());
+        
+        // Controls
+        document.getElementById('barWidth').addEventListener('input', (e) => {
+            this.barWidth = parseInt(e.target.value);
+            this.startAnimation();
+        });
+        
+        document.getElementById('spacing').addEventListener('input', (e) => {
+            this.spacing = parseInt(e.target.value);
+            this.startAnimation();
+        });
+        
+        document.getElementById('barColor').addEventListener('input', (e) => {
+            this.barColor = e.target.value;
+            this.startAnimation();
+        });
+        
+        document.getElementById('randomize').addEventListener('click', () => {
+            this.randomizeData();
+            this.startAnimation();
+        });
+    },
+    
+    startAnimation() {
+        this.startTime = null;
+        requestAnimationFrame(timestamp => this.animate(timestamp));
+    },
+    
+    animate(timestamp) {
+        if (!this.startTime) this.startTime = timestamp;
+        const progress = Math.min(1, (timestamp - this.startTime) / this.animationDuration);
+        
+        this.draw(progress);
+        
+        if (progress < 1) {
+            requestAnimationFrame(timestamp => this.animate(timestamp));
+        }
+    },
+    
+    draw(progress) {
+        const { width, height } = this.canvas;
+        this.ctx.clearRect(0, 0, width, height);
+        
+        // Draw background grid
+        this.drawGrid();
+        
+        // Calculate total width needed
+        const totalWidth = this.data.length * (this.barWidth + this.spacing) - this.spacing;
+        const startX = (width - totalWidth) / 2;
+        
+        // Draw bars
+        this.data.forEach((item, index) => {
+            const x = startX + index * (this.barWidth + this.spacing);
+            const barHeight = (item.value / this.maxValue) * (height - 100) * progress;
+            const y = height - 60 - barHeight;
+            
+            // Draw bar
+            this.ctx.fillStyle = this.barColor;
+            this.ctx.fillRect(x, height - 60, this.barWidth, -barHeight);
+            
+            // Draw label
+            this.ctx.fillStyle = '#1F2937';
+            this.ctx.font = '14px system-ui';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(item.label, x + this.barWidth / 2, height - 30);
+            
+            // Draw value
+            if (progress === 1) {
+                this.ctx.fillStyle = '#6B7280';
+                this.ctx.fillText(Math.round(item.value), x + this.barWidth / 2, y - 10);
+            }
+        });
+    },
+    
+    drawGrid() {
+        const { width, height } = this.canvas;
+        this.ctx.strokeStyle = '#E5E7EB';
+        this.ctx.lineWidth = 1;
+        
+        // Draw horizontal lines
+        for (let i = 0; i <= 10; i++) {
+            const y = height - 60 - (i * (height - 100) / 10);
+            this.ctx.beginPath();
+            this.ctx.moveTo(40, y);
+            this.ctx.lineTo(width - 40, y);
+            this.ctx.stroke();
+            
+            // Draw value labels
+            this.ctx.fillStyle = '#6B7280';
+            this.ctx.font = '12px system-ui';
+            this.ctx.textAlign = 'right';
+            this.ctx.fillText(i * 10, 35, y + 4);
+        }
+    },
+    
+    handleMouseMove(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const totalWidth = this.data.length * (this.barWidth + this.spacing) - this.spacing;
+        const startX = (this.canvas.width - totalWidth) / 2;
+        
+        for (let i = 0; i < this.data.length; i++) {
+            const barX = startX + i * (this.barWidth + this.spacing);
+            if (x >= barX && x <= barX + this.barWidth) {
+                const barHeight = (this.data[i].value / this.maxValue) * (this.canvas.height - 100);
+                const barY = this.canvas.height - 60 - barHeight;
+                
+                if (y <= this.canvas.height - 60 && y >= barY) {
+                    this.showTooltip(e.clientX, e.clientY, this.data[i]);
+                    return;
+                }
+            }
+        }
+        
+        this.hideTooltip();
+    },
+    
+    showTooltip(x, y, data) {
+        this.tooltip.style.opacity = '1';
+        this.tooltip.style.left = x + 'px';
+        this.tooltip.style.top = (y - 40) + 'px';
+        this.tooltip.textContent = `${data.label}: ${data.value}`;
+    },
+    
+    hideTooltip() {
+        this.tooltip.style.opacity = '0';
+    },
+    
+    randomizeData() {
+        this.data = this.data.map(item => ({
+            ...item,
+            value: Math.floor(Math.random() * 100)
+        }));
+    }
+};
+</code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Canvas Container -->
+                    <div class="canvas-container mb-8">
+                        <canvas id="chartCanvas" width="800" height="400"></canvas>
+                        <div class="tooltip"></div>
+                    </div>
+                    
+                    <!-- Controls -->
+                    <div class="control-panel p-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Bar Width Control -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Largeur des barres
+                                </label>
+                                <input type="range" id="barWidth" min="20" max="100" value="60" 
+                                       class="w-full">
+                            </div>
+                            
+                            <!-- Spacing Control -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Espacement
+                                </label>
+                                <input type="range" id="spacing" min="5" max="50" value="20" 
+                                       class="w-full">
+                            </div>
+                            
+                            <!-- Color Control -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Couleur
+                                </label>
+                                <input type="color" id="barColor" value="#3B82F6" 
+                                       class="color-picker">
+                            </div>
+                        </div>
+                        
+                        <!-- Randomize Button -->
+                        <div class="text-center">
+                            <button id="randomize" 
+                                    class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Randomiser les données
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const ChartManager = {
+            canvas: null,
+            ctx: null,
+            data: [],
+            barWidth: 60,
+            spacing: 20,
+            maxValue: 100,
+            animationDuration: 1000,
+            startTime: null,
+            barColor: '#3B82F6',
+            tooltip: null,
+            
+            init() {
+                this.canvas = document.getElementById('chartCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.tooltip = document.querySelector('.tooltip');
+                
+                this.data = [
+                    { label: 'HTML', value: 85 },
+                    { label: 'CSS', value: 75 },
+                    { label: 'JavaScript', value: 90 },
+                    { label: 'Canvas', value: 65 },
+                    { label: 'SVG', value: 70 }
+                ];
+                
+                this.setupEventListeners();
+                this.startAnimation();
+            },
+            
+            setupEventListeners() {
+                // Mouse move for tooltips
+                this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+                this.canvas.addEventListener('mouseleave', () => this.hideTooltip());
+                
+                // Controls
+                document.getElementById('barWidth').addEventListener('input', (e) => {
+                    this.barWidth = parseInt(e.target.value);
+                    this.startAnimation();
+                });
+                
+                document.getElementById('spacing').addEventListener('input', (e) => {
+                    this.spacing = parseInt(e.target.value);
+                    this.startAnimation();
+                });
+                
+                document.getElementById('barColor').addEventListener('input', (e) => {
+                    this.barColor = e.target.value;
+                    this.startAnimation();
+                });
+                
+                document.getElementById('randomize').addEventListener('click', () => {
+                    this.randomizeData();
+                    this.startAnimation();
+                });
+            },
+            
+            startAnimation() {
+                this.startTime = null;
+                requestAnimationFrame(timestamp => this.animate(timestamp));
+            },
+            
+            animate(timestamp) {
+                if (!this.startTime) this.startTime = timestamp;
+                const progress = Math.min(1, (timestamp - this.startTime) / this.animationDuration);
+                
+                this.draw(progress);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(timestamp => this.animate(timestamp));
+                }
+            },
+            
+            draw(progress) {
+                const { width, height } = this.canvas;
+                this.ctx.clearRect(0, 0, width, height);
+                
+                // Draw background grid
+                this.drawGrid();
+                
+                // Calculate total width needed
+                const totalWidth = this.data.length * (this.barWidth + this.spacing) - this.spacing;
+                const startX = (width - totalWidth) / 2;
+                
+                // Draw bars
+                this.data.forEach((item, index) => {
+                    const x = startX + index * (this.barWidth + this.spacing);
+                    const barHeight = (item.value / this.maxValue) * (height - 100) * progress;
+                    const y = height - 60 - barHeight;
+                    
+                    // Draw bar
+                    this.ctx.fillStyle = this.barColor;
+                    this.ctx.fillRect(x, height - 60, this.barWidth, -barHeight);
+                    
+                    // Draw label
+                    this.ctx.fillStyle = '#1F2937';
+                    this.ctx.font = '14px system-ui';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(item.label, x + this.barWidth / 2, height - 30);
+                    
+                    // Draw value
+                    if (progress === 1) {
+                        this.ctx.fillStyle = '#6B7280';
+                        this.ctx.fillText(Math.round(item.value), x + this.barWidth / 2, y - 10);
+                    }
+                });
+            },
+            
+            drawGrid() {
+                const { width, height } = this.canvas;
+                this.ctx.strokeStyle = '#E5E7EB';
+                this.ctx.lineWidth = 1;
+                
+                // Draw horizontal lines
+                for (let i = 0; i <= 10; i++) {
+                    const y = height - 60 - (i * (height - 100) / 10);
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(40, y);
+                    this.ctx.lineTo(width - 40, y);
+                    this.ctx.stroke();
+                    
+                    // Draw value labels
+                    this.ctx.fillStyle = '#6B7280';
+                    this.ctx.font = '12px system-ui';
+                    this.ctx.textAlign = 'right';
+                    this.ctx.fillText(i * 10, 35, y + 4);
+                }
+            },
+            
+            handleMouseMove(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const totalWidth = this.data.length * (this.barWidth + this.spacing) - this.spacing;
+                const startX = (this.canvas.width - totalWidth) / 2;
+                
+                for (let i = 0; i < this.data.length; i++) {
+                    const barX = startX + i * (this.barWidth + this.spacing);
+                    if (x >= barX && x <= barX + this.barWidth) {
+                        const barHeight = (this.data[i].value / this.maxValue) * (this.canvas.height - 100);
+                        const barY = this.canvas.height - 60 - barHeight;
+                        
+                        if (y <= this.canvas.height - 60 && y >= barY) {
+                            this.showTooltip(e.clientX, e.clientY, this.data[i]);
+                            return;
+                        }
+                    }
+                }
+                
+                this.hideTooltip();
+            },
+            
+            showTooltip(x, y, data) {
+                this.tooltip.style.opacity = '1';
+                this.tooltip.style.left = x + 'px';
+                this.tooltip.style.top = (y - 40) + 'px';
+                this.tooltip.textContent = `${data.label}: ${data.value}`;
+            },
+            
+            hideTooltip() {
+                this.tooltip.style.opacity = '0';
+            },
+            
+            randomizeData() {
+                this.data = this.data.map(item => ({
+                    ...item,
+                    value: Math.floor(Math.random() * 100)
+                }));
+            }
+        };
+
+        // Initialize the application
+        ChartManager.init();
+    </script>
+</body>
+</html>

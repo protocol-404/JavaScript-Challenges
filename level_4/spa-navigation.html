@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>spa-navigation - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .view {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3B82F6;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-link.active {
+            color: #3B82F6;
+        }
+        
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3B82F6;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Navigation SPA</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Ajoutez une navigation entre plusieurs vues avec une architecture SPA.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
+                <pre><code class="language-javascript">
+const Router = {
+    routes: new Map(),
+    defaultRoute: '',
+    
+    init(routes, defaultRoute = '') {
+        this.routes = new Map(Object.entries(routes));
+        this.defaultRoute = defaultRoute;
+        
+        window.addEventListener('popstate', () => this.handleRoute());
+        document.addEventListener('click', (e) => this.handleClick(e));
+        
+        this.handleRoute();
+    },
+    
+    handleClick(e) {
+        if (e.target.matches('[data-route]')) {
+            e.preventDefault();
+            const route = e.target.dataset.route;
+            this.navigateTo(route);
+        }
+    },
+    
+    async handleRoute() {
+        const path = window.location.hash.slice(1) || this.defaultRoute;
+        const view = this.routes.get(path);
+        
+        if (!view) {
+            this.navigateTo(this.defaultRoute);
+            return;
+        }
+        
+        this.updateActiveLink(path);
+        await this.renderView(view);
+    },
+    
+    navigateTo(route) {
+        window.location.hash = route;
+    },
+    
+    updateActiveLink(path) {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.dataset.route === path);
+        });
+    },
+    
+    async renderView(view) {
+        const container = document.getElementById('viewContainer');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        try {
+            loadingSpinner.classList.remove('hidden');
+            container.innerHTML = '';
+            
+            const content = await view();
+            
+            const viewElement = document.createElement('div');
+            viewElement.className = 'view';
+            viewElement.innerHTML = content;
+            
+            container.appendChild(viewElement);
+        } catch (error) {
+            this.showError('Erreur lors du chargement de la vue');
+        } finally {
+            loadingSpinner.classList.add('hidden');
+        }
+    },
+    
+    showError(message) {
+        const error = document.getElementById('errorMessage');
+        error.textContent = message;
+        error.classList.remove('hidden');
+        setTimeout(() => error.classList.add('hidden'), 3000);
+    }
+};
+
+const Views = {
+    async home() {
+        await this.simulateDelay();
+        return `
+            <div class="space-y-6">
+                <h2 class="text-2xl font-bold text-gray-800">Accueil</h2>
+                <p class="text-gray-600">
+                    Bienvenue sur notre application SPA ! Naviguez entre les différentes sections
+                    en utilisant le menu ci-dessus.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card bg-blue-50 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-2">Navigation fluide</h3>
+                        <p class="text-blue-600">
+                            Profitez d'une navigation sans rechargement de page pour une expérience
+                            utilisateur optimale.
+                        </p>
+                    </div>
+                    <div class="card bg-green-50 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-green-800 mb-2">Gestion d'état</h3>
+                        <p class="text-green-600">
+                            L'état de l'application est maintenu entre les changements de vue.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+    
+    async products() {
+        await this.simulateDelay();
+        const products = await this.fetchProducts();
+        
+        return `
+            <div class="space-y-6">
+                <h2 class="text-2xl font-bold text-gray-800">Produits</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    ${products.map(product => `
+                        <div class="card bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">${product.name}</h3>
+                            <p class="text-gray-600 mb-4">${product.description}</p>
+                            <div class="text-blue-600 font-bold">${product.price} €</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    },
+    
+    async about() {
+        await this.simulateDelay();
+        return `
+            <div class="space-y-6">
+                <h2 class="text-2xl font-bold text-gray-800">À propos</h2>
+                <p class="text-gray-600">
+                    Cette application démontre la mise en œuvre d'une architecture SPA (Single Page Application)
+                    en utilisant uniquement du JavaScript vanilla.
+                </p>
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Fonctionnalités</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>Routage côté client</li>
+                        <li>Gestion de l'historique de navigation</li>
+                        <li>Transitions fluides entre les vues</li>
+                        <li>Gestion des états de chargement</li>
+                        <li>Gestion des erreurs</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+    },
+    
+    async simulateDelay() {
+        return new Promise(resolve => setTimeout(resolve, 500));
+    },
+    
+    async fetchProducts() {
+        return [
+            { name: 'Produit 1', description: 'Description du produit 1', price: 29.99 },
+            { name: 'Produit 2', description: 'Description du produit 2', price: 39.99 },
+            { name: 'Produit 3', description: 'Description du produit 3', price: 49.99 },
+            { name: 'Produit 4', description: 'Description du produit 4', price: 59.99 },
+            { name: 'Produit 5', description: 'Description du produit 5', price: 69.99 },
+            { name: 'Produit 6', description: 'Description du produit 6', price: 79.99 }
+        ];
+    }
+};
+</code></pre>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <!-- Navigation -->
+                <nav class="bg-white p-4 rounded-lg shadow-sm mb-8">
+                    <ul class="flex space-x-6">
+                        <li>
+                            <a href="#" class="nav-link text-gray-600 hover:text-blue-600" data-route="home">
+                                Accueil
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-gray-600 hover:text-blue-600" data-route="products">
+                                Produits
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-gray-600 hover:text-blue-600" data-route="about">
+                                À propos
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- Loading & Error States -->
+                <div class="flex justify-center mb-4">
+                    <div id="loadingSpinner" class="loading-spinner hidden"></div>
+                </div>
+                <div id="errorMessage" class="hidden mb-4 p-4 bg-red-100 text-red-700 rounded-lg error-message"></div>
+                
+                <!-- View Container -->
+                <div id="viewContainer" class="min-h-[300px]"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const Router = {
+            routes: new Map(),
+            defaultRoute: '',
+            
+            init(routes, defaultRoute = '') {
+                this.routes = new Map(Object.entries(routes));
+                this.defaultRoute = defaultRoute;
+                
+                window.addEventListener('popstate', () => this.handleRoute());
+                document.addEventListener('click', (e) => this.handleClick(e));
+                
+                this.handleRoute();
+            },
+            
+            handleClick(e) {
+                if (e.target.matches('[data-route]')) {
+                    e.preventDefault();
+                    const route = e.target.dataset.route;
+                    this.navigateTo(route);
+                }
+            },
+            
+            async handleRoute() {
+                const path = window.location.hash.slice(1) || this.defaultRoute;
+                const view = this.routes.get(path);
+                
+                if (!view) {
+                    this.navigateTo(this.defaultRoute);
+                    return;
+                }
+                
+                this.updateActiveLink(path);
+                await this.renderView(view);
+            },
+            
+            navigateTo(route) {
+                window.location.hash = route;
+            },
+            
+            updateActiveLink(path) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.dataset.route === path);
+                });
+            },
+            
+            async renderView(view) {
+                const container = document.getElementById('viewContainer');
+                const loadingSpinner = document.getElementById('loadingSpinner');
+                
+                try {
+                    loadingSpinner.classList.remove('hidden');
+                    container.innerHTML = '';
+                    
+                    const content = await view();
+                    
+                    const viewElement = document.createElement('div');
+                    viewElement.className = 'view';
+                    viewElement.innerHTML = content;
+                    
+                    container.appendChild(viewElement);
+                } catch (error) {
+                    this.showError('Erreur lors du chargement de la vue');
+                } finally {
+                    loadingSpinner.classList.add('hidden');
+                }
+            },
+            
+            showError(message) {
+                const error = document.getElementById('errorMessage');
+                error.textContent = message;
+                error.classList.remove('hidden');
+                setTimeout(() => error.classList.add('hidden'), 3000);
+            }
+        };
+
+        const Views = {
+            async home() {
+                await this.simulateDelay();
+                return `
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Accueil</h2>
+                        <p class="text-gray-600">
+                            Bienvenue sur notre application SPA ! Naviguez entre les différentes sections
+                            en utilisant le menu ci-dessus.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card bg-blue-50 p-6 rounded-lg">
+                                <h3 class="text-lg font-semibold text-blue-800 mb-2">Navigation fluide</h3>
+                                <p class="text-blue-600">
+                                    Profitez d'une navigation sans rechargement de page pour une expérience
+                                    utilisateur optimale.
+                                </p>
+                            </div>
+                            <div class="card bg-green-50 p-6 rounded-lg">
+                                <h3 class="text-lg font-semibold text-green-800 mb-2">Gestion d'état</h3>
+                                <p class="text-green-600">
+                                    L'état de l'application est maintenu entre les changements de vue.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            async products() {
+                await this.simulateDelay();
+                const products = await this.fetchProducts();
+                
+                return `
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Produits</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            ${products.map(product => `
+                                <div class="card bg-white p-6 rounded-lg shadow-md">
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">${product.name}</h3>
+                                    <p class="text-gray-600 mb-4">${product.description}</p>
+                                    <div class="text-blue-600 font-bold">${product.price} €</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            },
+            
+            async about() {
+                await this.simulateDelay();
+                return `
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-bold text-gray-800">À propos</h2>
+                        <p class="text-gray-600">
+                            Cette application démontre la mise en œuvre d'une architecture SPA (Single Page Application)
+                            en utilisant uniquement du JavaScript vanilla.
+                        </p>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Fonctionnalités</h3>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <li>Routage côté client</li>
+                                <li>Gestion de l'historique de navigation</li>
+                                <li>Transitions fluides entre les vues</li>
+                                <li>Gestion des états de chargement</li>
+                                <li>Gestion des erreurs</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            async simulateDelay() {
+                return new Promise(resolve => setTimeout(resolve, 500));
+            },
+            
+            async fetchProducts() {
+                return [
+                    { name: 'Produit 1', description: 'Description du produit 1', price: 29.99 },
+                    { name: 'Produit 2', description: 'Description du produit 2', price: 39.99 },
+                    { name: 'Produit 3', description: 'Description du produit 3', price: 49.99 },
+                    { name: 'Produit 4', description: 'Description du produit 4', price: 59.99 },
+                    { name: 'Produit 5', description: 'Description du produit 5', price: 69.99 },
+                    { name: 'Produit 6', description: 'Description du produit 6', price: 79.99 }
+                ];
+            }
+        };
+
+        // Initialize the router
+        Router.init({
+            home: Views.home.bind(Views),
+            products: Views.products.bind(Views),
+            about: Views.about.bind(Views)
+        }, 'home');
+    </script>
+</body>
+</html>

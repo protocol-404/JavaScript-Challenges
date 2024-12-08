@@ -1,0 +1,44 @@
+.challenge-card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.challenge-card.file-exists {
+    background-color: #DEF7EC;
+    border: 1px solid #31C48D;
+}
+
+.challenge-card:hover {
+    transform: translateY(-2px);
+}
+
+.level-badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+}
+
+.level-débutant {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.level-intermédiaire {
+    background-color: #E1EFFE;
+    color: #1E429F;
+}
+
+.level-avancé {
+    background-color: #FDF6B2;
+    color: #723B13;
+}
+
+.level-expert {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+@media (max-width: 640px) {
+    .challenge-grid {
+        grid-template-columns: 1fr;
+    }
+}

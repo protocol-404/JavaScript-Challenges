@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Temps Réel - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .chat-container {
+            height: 400px;
+        }
+        
+        .messages {
+            height: calc(100% - 60px);
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        
+        .message {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .message.self {
+            background-color: #E9ECEF;
+        }
+        
+        .typing-indicator {
+            animation: bounce 1s infinite;
+        }
+        
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        
+        .user-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Application Temps Réel</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Créez une application en temps réel avec WebSocket pour implémenter un système de chat avec gestion des utilisateurs et indicateurs de présence.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
+                <div class="flex justify-center">
+                    <h1 class="text-2xl font-semibold mb-4 text-center">
+                        Solution en cours de développement
+                        <span id="typingIndicator" class="typing-indicator"></span>
+                    </h1>
+                </div>
+            </div>
+            
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <!-- add bug.gif here centered and big -->
+                <img src="../assets/bug.gif" alt="" style="display: block; margin: auto; justify-self: center;">
+            </div>
+        </div>
+    </main>
+</body>
+</html>

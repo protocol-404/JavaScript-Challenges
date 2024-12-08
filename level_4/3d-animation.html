@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation 3D - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+    <style>
+        .scene-container {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            background: linear-gradient(to bottom, #1a1a1a, #2d2d2d);
+        }
+        
+        #scene {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls-overlay {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #ffffff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Animation 3D</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Créez une scène 3D interactive avec Three.js en chargeant et animant un modèle 3D avec des contrôles utilisateur.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
+                <pre><code class="language-javascript">
+const Scene3D = {
+    scene: null,
+    camera: null,
+    renderer: null,
+    controls: null,
+    model: null,
+    mixer: null,
+    clock: new THREE.Clock(),
+    animations: [],
+    
+    init() {
+        this.setupScene();
+        this.setupCamera();
+        this.setupRenderer();
+        this.setupLights();
+        this.setupControls();
+        this.loadModel();
+        this.animate();
+        this.handleResize();
+    },
+    
+    setupScene() {
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x1a1a1a);
+        
+        // Add subtle ambient light
+        const ambientLight = new THREE.AmbientLight(0x404040, 2);
+        this.scene.add(ambientLight);
+    },
+    
+    setupCamera() {
+        const container = document.getElementById('scene');
+        const aspect = container.clientWidth / container.clientHeight;
+        this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 2000);
+        this.camera.position.set(0, 20, 100);
+    },
+    
+    setupRenderer() {
+        const container = document.getElementById('scene');
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setSize(container.clientWidth, container.clientHeight);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        container.appendChild(this.renderer.domElement);
+    },
+    
+    setupLights() {
+        // Key light
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1);
+        keyLight.position.set(2, 2, 2);
+        this.scene.add(keyLight);
+        
+        // Fill light
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        fillLight.position.set(-2, 2, 2);
+        this.scene.add(fillLight);
+        
+        // Back light
+        const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        backLight.position.set(0, 2, -2);
+        this.scene.add(backLight);
+    },
+    
+    setupControls() {
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+        this.controls.screenSpacePanning = false;
+        this.controls.minDistance = 50;
+        this.controls.maxDistance = 200;
+        this.controls.maxPolarAngle = Math.PI / 2;
+    },
+    
+    loadModel() {
+        const loadingOverlay = document.querySelector('.loading-overlay');
+        const loader = new THREE.GLTFLoader();
+        
+        // Optional: Setup draco decoder for compressed models
+        const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+        loader.setDRACOLoader(dracoLoader);
+        
+        loader.load(
+            '../assets/portrait_from_the_future.glb',
+            (gltf) => {
+                this.model = gltf.scene;
+                this.scene.add(this.model);
+                
+                // Center model
+                const box = new THREE.Box3().setFromObject(this.model);
+                const center = box.getCenter(new THREE.Vector3());
+                this.model.position.sub(center);
+                
+                // Setup animations
+                this.mixer = new THREE.AnimationMixer(this.model);
+                this.animations = gltf.animations;
+                
+                if (this.animations.length > 0) {
+                    const action = this.mixer.clipAction(this.animations[0]);
+                    action.play();
+                }
+                
+                loadingOverlay.style.display = 'none';
+            },
+            (xhr) => {
+                const progress = (xhr.loaded / xhr.total) * 100;
+                console.log(`${Math.round(progress)}% loaded`);
+            },
+            (error) => {
+                console.error('Error loading model:', error);
+                loadingOverlay.innerHTML = '<p class="text-white">Error loading model</p>';
+            }
+        );
+    },
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        
+        const delta = this.clock.getDelta();
+        
+        if (this.mixer) {
+            this.mixer.update(delta);
+        }
+        
+        if (this.controls) {
+            this.controls.update();
+        }
+        
+        if (this.model) {
+            this.model.rotation.y += 0.001;
+        }
+        
+        this.renderer.render(this.scene, this.camera);
+    },
+    
+    handleResize() {
+        window.addEventListener('resize', () => {
+            const container = document.getElementById('scene');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            this.camera.aspect = width / height;
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(width, height);
+        });
+    },
+    
+    toggleRotation() {
+        if (this.model) {
+            this.autoRotate = !this.autoRotate;
+            this.controls.autoRotate = this.autoRotate;
+        }
+    },
+    
+    resetCamera() {
+        if (this.controls) {
+            this.camera.position.set(0, 20, 100);
+            this.controls.target.set(0, 0, 0);
+            this.controls.update();
+        }
+    }
+};
+
+// Initialize the application
+Scene3D.init();
+</code></pre>
+            </div>
+            
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="scene-container">
+                        <div id="scene"></div>
+                        <div class="loading-overlay">
+                            <div class="spinner"></div>
+                        </div>
+                        <div class="controls-overlay">
+                            <button onclick="Scene3D.toggleRotation()"
+                                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Auto-rotation
+                            </button>
+                            <button onclick="Scene3D.resetCamera()"
+                                class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                                Reset Camera
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4 text-center">
+                        Utilisez la souris pour faire pivoter la vue. Molette pour zoomer.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const Scene3D = {
+            scene: null,
+            camera: null,
+            renderer: null,
+            controls: null,
+            model: null,
+            mixer: null,
+            clock: new THREE.Clock(),
+            animations: [],
+            autoRotate: false,
+            
+            init() {
+                this.setupScene();
+                this.setupCamera();
+                this.setupRenderer();
+                this.setupLights();
+                this.setupControls();
+                this.loadModel();
+                this.animate();
+                this.handleResize();
+            },
+            
+            setupScene() {
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x1a1a1a);
+                
+                const ambientLight = new THREE.AmbientLight(0x404040, 2);
+                this.scene.add(ambientLight);
+            },
+            
+            setupCamera() {
+                const container = document.getElementById('scene');
+                const aspect = container.clientWidth / container.clientHeight;
+                this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 2000);
+                this.camera.position.set(0, 20, 100);
+            },
+            
+            
+            setupRenderer() {
+                const container = document.getElementById('scene');
+                this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                this.renderer.setSize(container.clientWidth, container.clientHeight);
+                this.renderer.setPixelRatio(window.devicePixelRatio);
+                this.renderer.outputEncoding = THREE.sRGBEncoding;
+                container.appendChild(this.renderer.domElement);
+            },
+            
+            setupLights() {
+                const keyLight = new THREE.DirectionalLight(0xffffff, 1);
+                keyLight.position.set(2, 2, 2);
+                this.scene.add(keyLight);
+                
+                const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+                fillLight.position.set(-2, 2, 2);
+                this.scene.add(fillLight);
+                
+                const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+                backLight.position.set(0, 2, -2);
+                this.scene.add(backLight);
+            },
+            
+            setupControls() {
+                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.05;
+                this.controls.screenSpacePanning = false;
+                this.controls.minDistance = 50;
+                this.controls.maxDistance = 200;
+            },
+            
+            loadModel() {
+                const loadingOverlay = document.querySelector('.loading-overlay');
+                const loader = new THREE.GLTFLoader();
+                
+                const dracoLoader = new THREE.DRACOLoader();
+                dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+                loader.setDRACOLoader(dracoLoader);
+                
+                loader.load(
+                    '../assets/portrait_from_the_future.glb',
+                    (gltf) => {
+                        this.model = gltf.scene;
+                        this.scene.add(this.model);
+                        
+                        const box = new THREE.Box3().setFromObject(this.model);
+                        const center = box.getCenter(new THREE.Vector3());
+                        this.model.position.sub(center);
+                        
+                        this.mixer = new THREE.AnimationMixer(this.model);
+                        this.animations = gltf.animations;
+                        
+                        if (this.animations.length > 0) {
+                            const action = this.mixer.clipAction(this.animations[0]);
+                            action.play();
+                        }
+                        
+                        loadingOverlay.style.display = 'none';
+                    },
+                    (xhr) => {
+                        const progress = (xhr.loaded / xhr.total) * 100;
+                        console.log(`${Math.round(progress)}% loaded`);
+                    },
+                    (error) => {
+                        console.error('Error loading model:', error);
+                        loadingOverlay.innerHTML = '<p class="text-white">Error loading model</p>';
+                    }
+                );
+            },
+            
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                const delta = this.clock.getDelta();
+                
+                if (this.mixer) {
+                    this.mixer.update(delta);
+                }
+                
+                if (this.controls) {
+                    this.controls.update();
+                }
+                
+                if (this.model && this.autoRotate) {
+                    this.model.rotation.y += 0.01;
+                }
+                
+                this.renderer.render(this.scene, this.camera);
+            },
+            
+            handleResize() {
+                window.addEventListener('resize', () => {
+                    const container = document.getElementById('scene');
+                    const width = container.clientWidth;
+                    const height = container.clientHeight;
+                    
+                    this.camera.aspect = width / height;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(width, height);
+                });
+            },
+            
+            toggleRotation() {
+                this.autoRotate = !this.autoRotate;
+            },
+            
+            resetCamera() {
+                if (this.controls) {
+                    this.camera.position.set(0, 20, 100);
+                    this.controls.target.set(0, 0, 0);
+                    this.controls.update();
+                }
+            }
+        };
+
+        // Initialize the application
+        Scene3D.init();
+    </script>
+</body>
+</html>

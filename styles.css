@@ -37,8 +37,44 @@
     color: #9B1C1C;
 }
 
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 @media (max-width: 640px) {
     .challenge-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    header .container > div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    header nav {
+        margin-left: 0;
+        margin-top: 1rem;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    #level-nav {
+        padding-bottom: 0.5rem;
     }
 }

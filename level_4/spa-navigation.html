@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>spa-navigation - Challenge JavaScript</title>
+    <title>SPA Navigation - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -83,9 +83,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Navigation SPA</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Single Page Application Navigation</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -95,7 +95,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez une navigation entre plusieurs vues avec une architecture SPA.
+                Create a Single Page Application (SPA) with client-side routing. Implement navigation between pages without full page reloads.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -162,7 +162,7 @@ const Router = {
             
             container.appendChild(viewElement);
         } catch (error) {
-            this.showError('Erreur lors du chargement de la vue');
+            this.showError('Error loading view');
         } finally {
             loadingSpinner.classList.add('hidden');
         }
@@ -181,23 +181,21 @@ const Views = {
         await this.simulateDelay();
         return `
             <div class="space-y-6">
-                <h2 class="text-2xl font-bold text-gray-800">Accueil</h2>
+                <h2 class="text-2xl font-bold text-gray-800">Home</h2>
                 <p class="text-gray-600">
-                    Bienvenue sur notre application SPA ! Naviguez entre les différentes sections
-                    en utilisant le menu ci-dessus.
+                    Welcome to our Single Page Application! Navigate between different sections using the menu above.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="card bg-blue-50 p-6 rounded-lg">
-                        <h3 class="text-lg font-semibold text-blue-800 mb-2">Navigation fluide</h3>
+                        <h3 class="text-lg font-semibold text-blue-800 mb-2">Smooth Navigation</h3>
                         <p class="text-blue-600">
-                            Profitez d'une navigation sans rechargement de page pour une expérience
-                            utilisateur optimale.
+                            Enjoy smooth navigation without full page reloads for an optimal user experience.
                         </p>
                     </div>
                     <div class="card bg-green-50 p-6 rounded-lg">
-                        <h3 class="text-lg font-semibold text-green-800 mb-2">Gestion d'état</h3>
+                        <h3 class="text-lg font-semibold text-green-800 mb-2">State Management</h3>
                         <p class="text-green-600">
-                            L'état de l'application est maintenu entre les changements de vue.
+                            The application state is maintained between page changes.
                         </p>
                     </div>
                 </div>
@@ -211,7 +209,7 @@ const Views = {
         
         return `
             <div class="space-y-6">
-                <h2 class="text-2xl font-bold text-gray-800">Produits</h2>
+                <h2 class="text-2xl font-bold text-gray-800">Products</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     ${products.map(product => `
                         <div class="card bg-white p-6 rounded-lg shadow-md">
@@ -229,19 +227,18 @@ const Views = {
         await this.simulateDelay();
         return `
             <div class="space-y-6">
-                <h2 class="text-2xl font-bold text-gray-800">À propos</h2>
+                <h2 class="text-2xl font-bold text-gray-800">About</h2>
                 <p class="text-gray-600">
-                    Cette application démontre la mise en œuvre d'une architecture SPA (Single Page Application)
-                    en utilisant uniquement du JavaScript vanilla.
+                    This application demonstrates the implementation of a Single Page Application (SPA) using only vanilla JavaScript.
                 </p>
                 <div class="bg-gray-50 p-6 rounded-lg">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Fonctionnalités</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Features</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
-                        <li>Routage côté client</li>
-                        <li>Gestion de l'historique de navigation</li>
-                        <li>Transitions fluides entre les vues</li>
-                        <li>Gestion des états de chargement</li>
-                        <li>Gestion des erreurs</li>
+                        <li>Client-side routing</li>
+                        <li>Navigation history management</li>
+                        <li>Smooth page transitions</li>
+                        <li>Loading state management</li>
+                        <li>Error handling</li>
                     </ul>
                 </div>
             </div>
@@ -254,36 +251,36 @@ const Views = {
     
     async fetchProducts() {
         return [
-            { name: 'Produit 1', description: 'Description du produit 1', price: 29.99 },
-            { name: 'Produit 2', description: 'Description du produit 2', price: 39.99 },
-            { name: 'Produit 3', description: 'Description du produit 3', price: 49.99 },
-            { name: 'Produit 4', description: 'Description du produit 4', price: 59.99 },
-            { name: 'Produit 5', description: 'Description du produit 5', price: 69.99 },
-            { name: 'Produit 6', description: 'Description du produit 6', price: 79.99 }
+            { name: 'Product 1', description: 'Description of product 1', price: 29.99 },
+            { name: 'Product 2', description: 'Description of product 2', price: 39.99 },
+            { name: 'Product 3', description: 'Description of product 3', price: 49.99 },
+            { name: 'Product 4', description: 'Description of product 4', price: 59.99 },
+            { name: 'Product 5', description: 'Description of product 5', price: 69.99 },
+            { name: 'Product 6', description: 'Description of product 6', price: 79.99 }
         ];
     }
 };
 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <!-- Navigation -->
                 <nav class="bg-white p-4 rounded-lg shadow-sm mb-8">
                     <ul class="flex space-x-6">
                         <li>
                             <a href="#" class="nav-link text-gray-600 hover:text-blue-600" data-route="home">
-                                Accueil
+                                Home
                             </a>
                         </li>
                         <li>
                             <a href="#" class="nav-link text-gray-600 hover:text-blue-600" data-route="products">
-                                Produits
+                                Products
                             </a>
                         </li>
                         <li>
                             <a href="#" class="nav-link text-gray-600 hover:text-blue-600" data-route="about">
-                                À propos
+                                About
                             </a>
                         </li>
                     </ul>
@@ -363,7 +360,7 @@ const Views = {
                     
                     container.appendChild(viewElement);
                 } catch (error) {
-                    this.showError('Erreur lors du chargement de la vue');
+                    this.showError('Error loading view');
                 } finally {
                     loadingSpinner.classList.add('hidden');
                 }
@@ -382,23 +379,21 @@ const Views = {
                 await this.simulateDelay();
                 return `
                     <div class="space-y-6">
-                        <h2 class="text-2xl font-bold text-gray-800">Accueil</h2>
+                        <h2 class="text-2xl font-bold text-gray-800">Home</h2>
                         <p class="text-gray-600">
-                            Bienvenue sur notre application SPA ! Naviguez entre les différentes sections
-                            en utilisant le menu ci-dessus.
+                            Welcome to our Single Page Application! Navigate between different sections using the menu above.
                         </p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="card bg-blue-50 p-6 rounded-lg">
-                                <h3 class="text-lg font-semibold text-blue-800 mb-2">Navigation fluide</h3>
+                                <h3 class="text-lg font-semibold text-blue-800 mb-2">Smooth Navigation</h3>
                                 <p class="text-blue-600">
-                                    Profitez d'une navigation sans rechargement de page pour une expérience
-                                    utilisateur optimale.
+                                    Enjoy smooth navigation without full page reloads for an optimal user experience.
                                 </p>
                             </div>
                             <div class="card bg-green-50 p-6 rounded-lg">
-                                <h3 class="text-lg font-semibold text-green-800 mb-2">Gestion d'état</h3>
+                                <h3 class="text-lg font-semibold text-green-800 mb-2">State Management</h3>
                                 <p class="text-green-600">
-                                    L'état de l'application est maintenu entre les changements de vue.
+                                    The application state is maintained between page changes.
                                 </p>
                             </div>
                         </div>
@@ -412,7 +407,7 @@ const Views = {
                 
                 return `
                     <div class="space-y-6">
-                        <h2 class="text-2xl font-bold text-gray-800">Produits</h2>
+                        <h2 class="text-2xl font-bold text-gray-800">Products</h2>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             ${products.map(product => `
                                 <div class="card bg-white p-6 rounded-lg shadow-md">
@@ -430,19 +425,18 @@ const Views = {
                 await this.simulateDelay();
                 return `
                     <div class="space-y-6">
-                        <h2 class="text-2xl font-bold text-gray-800">À propos</h2>
+                        <h2 class="text-2xl font-bold text-gray-800">About</h2>
                         <p class="text-gray-600">
-                            Cette application démontre la mise en œuvre d'une architecture SPA (Single Page Application)
-                            en utilisant uniquement du JavaScript vanilla.
+                            This application demonstrates the implementation of a Single Page Application (SPA) using only vanilla JavaScript.
                         </p>
                         <div class="bg-gray-50 p-6 rounded-lg">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Fonctionnalités</h3>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Features</h3>
                             <ul class="list-disc list-inside space-y-2 text-gray-600">
-                                <li>Routage côté client</li>
-                                <li>Gestion de l'historique de navigation</li>
-                                <li>Transitions fluides entre les vues</li>
-                                <li>Gestion des états de chargement</li>
-                                <li>Gestion des erreurs</li>
+                                <li>Client-side routing</li>
+                                <li>Navigation history management</li>
+                                <li>Smooth page transitions</li>
+                                <li>Loading state management</li>
+                                <li>Error handling</li>
                             </ul>
                         </div>
                     </div>
@@ -455,12 +449,12 @@ const Views = {
             
             async fetchProducts() {
                 return [
-                    { name: 'Produit 1', description: 'Description du produit 1', price: 29.99 },
-                    { name: 'Produit 2', description: 'Description du produit 2', price: 39.99 },
-                    { name: 'Produit 3', description: 'Description du produit 3', price: 49.99 },
-                    { name: 'Produit 4', description: 'Description du produit 4', price: 59.99 },
-                    { name: 'Produit 5', description: 'Description du produit 5', price: 69.99 },
-                    { name: 'Produit 6', description: 'Description du produit 6', price: 79.99 }
+                    { name: 'Product 1', description: 'Description of product 1', price: 29.99 },
+                    { name: 'Product 2', description: 'Description of product 2', price: 39.99 },
+                    { name: 'Product 3', description: 'Description of product 3', price: 49.99 },
+                    { name: 'Product 4', description: 'Description of product 4', price: 59.99 },
+                    { name: 'Product 5', description: 'Description of product 5', price: 69.99 },
+                    { name: 'Product 6', description: 'Description of product 6', price: 79.99 }
                 ];
             }
         };

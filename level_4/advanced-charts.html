@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>advanced-charts - Challenge JavaScript</title>
+    <title>Advanced Charts - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../styles.css">
@@ -69,9 +69,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Graphiques avancés</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Advanced Charts</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -81,7 +81,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez des graphiques interactifs à l'aide de Chart.js.
+                Create advanced data visualizations using Chart.js. Implement multiple chart types with interactive features, animations, and real-time updates.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -110,7 +110,7 @@ const ChartManager = {
             data: {
                 labels: this.data.daily.map(d => d.x),
                 datasets: [{
-                    label: 'Ventes',
+                    label: 'Sales',
                     data: this.data.daily.map(d => d.y),
                     borderColor: 'rgb(59, 130, 246)',
                     tension: 0.4
@@ -195,17 +195,17 @@ ChartManager.init();
 </code></pre>
             </div>
             
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="space-y-8">
                     <!-- Line Chart -->
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800">Évolution des ventes</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Sales Trend</h3>
                             <div class="button-group">
-                                <button class="px-4 py-2 rounded-lg text-sm font-medium active" data-period="day">Jour</button>
-                                <button class="px-4 py-2 rounded-lg text-sm font-medium" data-period="week">Semaine</button>
-                                <button class="px-4 py-2 rounded-lg text-sm font-medium" data-period="month">Mois</button>
+                                <button class="px-4 py-2 rounded-lg text-sm font-medium active" data-period="day">Day</button>
+                                <button class="px-4 py-2 rounded-lg text-sm font-medium" data-period="week">Week</button>
+                                <button class="px-4 py-2 rounded-lg text-sm font-medium" data-period="month">Month</button>
                             </div>
                         </div>
                         <div class="chart-container" style="height: 300px;">
@@ -216,11 +216,11 @@ ChartManager.init();
                     <!-- Bar Chart -->
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800">Répartition par catégorie</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Category Distribution</h3>
                             <div class="flex items-center space-x-4">
                                 <label class="flex items-center">
                                     <input type="checkbox" id="stackedToggle" class="mr-2">
-                                    <span class="text-sm">Empilé</span>
+                                    <span class="text-sm">Stacked</span>
                                 </label>
                                 <div id="barChartSpinner" class="loading-spinner hidden"></div>
                             </div>
@@ -233,10 +233,10 @@ ChartManager.init();
                     <!-- Doughnut Chart -->
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800">Répartition des revenus</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Revenue Distribution</h3>
                             <div class="flex items-center space-x-4">
                                 <button id="shuffleData" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                                    Actualiser
+                                    Shuffle
                                 </button>
                             </div>
                         </div>
@@ -273,17 +273,17 @@ ChartManager.init();
                 }));
                 
                 this.data.weekly = Array.from({ length: 7 }, (_, i) => ({
-                    x: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'][i],
+                    x: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][i],
                     y: Math.floor(Math.random() * 500)
                 }));
                 
                 this.data.monthly = Array.from({ length: 12 }, (_, i) => ({
-                    x: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'][i],
+                    x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
                     y: Math.floor(Math.random() * 2000)
                 }));
                 
                 this.data.categories = {
-                    labels: ['Électronique', 'Vêtements', 'Alimentation', 'Maison'],
+                    labels: ['Electronics', 'Clothing', 'Food', 'Home'],
                     datasets: [
                         {
                             label: '2023',
@@ -299,7 +299,7 @@ ChartManager.init();
                 };
                 
                 this.data.revenue = {
-                    labels: ['Produits', 'Services', 'Abonnements', 'Autres'],
+                    labels: ['Products', 'Services', 'Subscriptions', 'Others'],
                     datasets: [{
                         data: [40, 30, 20, 10],
                         backgroundColor: [
@@ -317,7 +317,7 @@ ChartManager.init();
                     type: 'line',
                     data: {
                         datasets: [{
-                            label: 'Ventes',
+                            label: 'Sales',
                             data: this.data.daily,
                             borderColor: 'rgb(59, 130, 246)',
                             tension: 0.4,

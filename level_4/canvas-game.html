@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>canvas-game - Challenge JavaScript</title>
+    <title>canvas-game - JavaScript Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -104,9 +104,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Jeu Canvas</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Canvas Game</h1>
                 <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -116,7 +116,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Créez un jeu simple utilisant l'API Canvas avec animation et contrôles utilisateur.
+                Create a simple game using the Canvas API with animation and user controls.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -350,23 +350,23 @@ Game.init();
 </code></pre>
             </div>
             
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-3xl mx-auto">
                     <div class="game-container">
                         <canvas id="gameCanvas"></canvas>
                         <div class="controls">
-                            Utilisez les flèches ← → pour vous déplacer et ESPACE pour tirer
+                            Use arrow keys to move, space to shoot
                         </div>
                         <div class="score">Score: <span id="scoreValue">0</span></div>
                         <div class="health-bar">
                             <div class="health-bar-fill" style="width: 100%"></div>
                         </div>
                         <div class="game-over">
-                            <h2 class="text-2xl font-bold mb-4">Game Over</h2>
-                            <p class="mb-4">Score final: <span class="final-score">0</span></p>
-                            <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors" onclick="Game.restart()">
-                                Rejouer
+                            <h2 class="text-2xl font-bold mb-4">Game Over!</h2>
+                            <p class="mb-4">Final Score: <span class="final-score">0</span></p>
+                            <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors" onclick="Game.restart()">
+                                Play Again
                             </button>
                         </div>
                     </div>

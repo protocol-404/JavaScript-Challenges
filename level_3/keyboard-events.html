@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>keyboard-events - Challenge JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .key-combo {
+            transition: all 0.3s ease;
+        }
+        
+        .key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 30px;
+            padding: 0 8px;
+            border-radius: 4px;
+            background-color: #F3F4F6;
+            border: 1px solid #D1D5DB;
+            box-shadow: 0 2px 0 #D1D5DB;
+            font-family: monospace;
+            font-weight: 600;
+        }
+        
+        .active {
+            background-color: #93C5FD;
+            border-color: #60A5FA;
+            box-shadow: 0 0 0 2px #60A5FA;
+            transform: translateY(2px);
+        }
+
+        .action-log {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .action-log::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .action-log::-webkit-scrollbar-track {
+            background: #F3F4F6;
+            border-radius: 4px;
+        }
+        
+        .action-log::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 4px;
+        }
+        
+        .action-log::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Gérer les événements clavier</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Ajoutez des combinaisons de touches pour déclencher des actions spécifiques.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
+                <h2 class="text-black mb-4" style="text-align: center;">The code below has a bug that needs to be fixed to work.</h2>
+                <img src="../assets/bug.gif" alt="" style="display: block; margin: auto; justify-self: center;">
+                <!-- <pre><code class="language-javascript">
+const KeyboardManager = {
+    shortcuts: new Map(),
+    pressedKeys: new Set(),
+    
+    init() {
+        this.setupShortcuts();
+        this.setupEventListeners();
+    },
+    
+    setupShortcuts() {
+        this.shortcuts.set('Control+S', {
+            keys: ['Control', 'S'],
+            description: 'Sauvegarder',
+            action: () => UI.logAction('Sauvegarde effectuée')
+        });
+        
+        this.shortcuts.set('Control+Z', {
+            keys: ['Control', 'Z'],
+            description: 'Annuler',
+            action: () => UI.logAction('Action annulée')
+        });
+        
+        this.shortcuts.set('Control+Y', {
+            keys: ['Control', 'Y'],
+            description: 'Rétablir',
+            action: () => UI.logAction('Action rétablie')
+        });
+        
+        this.shortcuts.set('Control+F', {
+            keys: ['Control', 'F'],
+            description: 'Rechercher',
+            action: () => UI.logAction('Recherche activée')
+        });
+        
+        this.shortcuts.set('Control+N', {
+            keys: ['Control', 'N'],
+            description: 'Nouveau',
+            action: () => UI.logAction('Nouveau document créé')
+        });
+    },
+    
+    setupEventListeners() {
+        document.addEventListener('keydown', (e) => {
+            this.pressedKeys.add(e.key);
+            
+            if (e.key === 'Control') {
+                document.querySelectorAll('[data-key="Control"]').forEach(element => {
+                    element.classList.add('active');
+                });
+            }
+            
+            if (this.isKnownShortcut(e)) {
+                e.preventDefault();
+            }
+            
+            this.checkShortcuts();
+        });
+
+        document.addEventListener('keyup', (e) => {
+            this.pressedKeys.delete(e.key);
+            
+            if (e.key === 'Control') {
+                document.querySelectorAll('[data-key="Control"]').forEach(element => {
+                    element.classList.remove('active');
+                });
+            } else {
+                UI.updateKeyDisplay(e.key, false);
+            }
+        });
+    },
+    
+    isKnownShortcut(e) {
+        for (let [_, shortcut] of this.shortcuts) {
+            if (shortcut.keys.includes(e.key) && 
+                shortcut.keys.every(key => this.pressedKeys.has(key) || key === e.key)) {
+                return true;
+            }
+        }
+        return false;
+    },
+    
+    checkShortcuts() {
+        for (let [_, shortcut] of this.shortcuts) {
+            if (shortcut.keys.every(key => this.pressedKeys.has(key))) {
+                UI.logAction(`${shortcut.description} (${shortcut.keys.join('+')})`, shortcut.action);
+                this.pressedKeys.clear(); // Prevent duplicate logs for the same shortcut
+                break;
+            }
+        }
+    }
+};
+
+const UI = {
+    actionLog: null,
+    keyElements: new Map(),
+    
+    init() {
+        this.actionLog = document.getElementById('actionLog');
+        this.setupKeyElements();
+        KeyboardManager.init();
+        this.logAction("Journal des actions initialisé", null);
+    },
+    
+    setupKeyElements() {
+        document.querySelectorAll('.key').forEach(element => {
+            this.keyElements.set(element.dataset.key, element);
+        });
+    },
+    
+    updateKeyDisplay(key, isPressed) {
+        const element = this.keyElements.get(key);
+        if (element) {
+            if (isPressed) {
+                element.classList.add('active');
+            } else {
+                element.classList.remove('active');
+            }
+        }
+    },
+    
+    logAction(message, action) {
+        const logEntry = document.createElement('div');
+        logEntry.className = 'py-3 flex items-center justify-between hover:bg-gray-50 transition-colors';
+        
+        const leftContent = document.createElement('div');
+        leftContent.className = 'flex items-center space-x-4';
+        
+        const timestamp = document.createElement('span');
+        timestamp.className = 'text-gray-500 text-sm font-mono';
+        timestamp.textContent = new Date().toLocaleTimeString();
+        
+        const messageText = document.createElement('span');
+        messageText.className = 'text-gray-800';
+        messageText.textContent = message;
+        
+        leftContent.appendChild(timestamp);
+        leftContent.appendChild(messageText);
+        
+        if (message.includes('(')) {
+            const icon = document.createElement('span');
+            icon.className = 'text-blue-500';
+            icon.innerHTML = `
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                </svg>`;
+            leftContent.insertBefore(icon, timestamp);
+        }
+        
+        logEntry.appendChild(leftContent);
+        
+        const entriesContainer = this.actionLog.querySelector('.action-log-entries');
+        entriesContainer.insertBefore(logEntry, entriesContainer.firstChild);
+        
+        const maxEntries = 50;
+        const entries = entriesContainer.children;
+        if (entries.length > maxEntries) {
+            entriesContainer.removeChild(entries[entries.length - 1]);
+        }
+        
+        if (action && typeof action === 'function') {
+            action();
+        }
+    }
+};
+</code></pre> -->
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-xl mx-auto">
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+                        <h3 class="text-lg font-semibold mb-4">Raccourcis clavier disponibles</h3>
+                        <div class="space-y-4">
+                            <div class="key-combo flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="key" data-key="Control">Ctrl</span>
+                                    <span>+</span>
+                                    <span class="key" data-key="S">S</span>
+                                </div>
+                                <span class="text-gray-600">Sauvegarder</span>
+                            </div>
+                            
+                            <div class="key-combo flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="key" data-key="Control">Ctrl</span>
+                                    <span>+</span>
+                                    <span class="key" data-key="Z">Z</span>
+                                </div>
+                                <span class="text-gray-600">Annuler</span>
+                            </div>
+                            
+                            <div class="key-combo flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="key" data-key="Control">Ctrl</span>
+                                    <span>+</span>
+                                    <span class="key" data-key="Y">Y</span>
+                                </div>
+                                <span class="text-gray-600">Rétablir</span>
+                            </div>
+                            
+                            <div class="key-combo flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="key" data-key="Control">Ctrl</span>
+                                    <span>+</span>
+                                    <span class="key" data-key="F">F</span>
+                                </div>
+                                <span class="text-gray-600">Rechercher</span>
+                            </div>
+                            
+                            <div class="key-combo flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="key" data-key="Control">Ctrl</span>
+                                    <span>+</span>
+                                    <span class="key" data-key="N">N</span>
+                                </div>
+                                <span class="text-gray-600">Nouveau</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="actionLog" class="action-log bg-white p-6 rounded-lg shadow-sm mt-6">
+                        <h3 class="text-lg font-semibold mb-4">Journal des actions</h3>
+                        <div class="action-log-entries space-y-2 max-h-[400px] overflow-y-auto divide-y divide-gray-100">
+                            <!-- Actions will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const KeyboardManager = {
+            shortcuts: new Map(),
+            pressedKeys: new Set(),
+            
+            init() {
+                this.setupShortcuts();
+                this.setupEventListeners();
+            },
+            
+            setupShortcuts() {
+                this.shortcuts.set('Control+S', {
+                    keys: ['Control', 'S'],
+                    description: 'Sauvegarder',
+                    action: () => UI.logAction('Sauvegarde effectuée')
+                });
+                
+                this.shortcuts.set('Control+Z', {
+                    keys: ['Control', 'Z'],
+                    description: 'Annuler',
+                    action: () => UI.logAction('Action annulée')
+                });
+                
+                this.shortcuts.set('Control+Y', {
+                    keys: ['Control', 'Y'],
+                    description: 'Rétablir',
+                    action: () => UI.logAction('Action rétablie')
+                });
+                
+                this.shortcuts.set('Control+F', {
+                    keys: ['Control', 'F'],
+                    description: 'Rechercher',
+                    action: () => UI.logAction('Recherche activée')
+                });
+                
+                this.shortcuts.set('Control+N', {
+                    keys: ['Control', 'N'],
+                    description: 'Nouveau',
+                    action: () => UI.logAction('Nouveau document créé')
+                });
+            },
+            
+            setupEventListeners() {
+                document.addEventListener('keydown', (e) => {
+                    this.pressedKeys.add(e.key);
+                    
+                    if (e.key === 'Control') {
+                        document.querySelectorAll('[data-key="Control"]').forEach(element => {
+                            element.classList.add('active');
+                        });
+                    }
+                    
+                    if (this.isKnownShortcut(e)) {
+                        e.preventDefault();
+                    }
+                    
+                    this.checkShortcuts();
+                });
+
+                document.addEventListener('keyup', (e) => {
+                    this.pressedKeys.delete(e.key);
+                    
+                    if (e.key === 'Control') {
+                        document.querySelectorAll('[data-key="Control"]').forEach(element => {
+                            element.classList.remove('active');
+                        });
+                    } else {
+                        UI.updateKeyDisplay(e.key, false);
+                    }
+                });
+            },
+            
+            isKnownShortcut(e) {
+                for (let [_, shortcut] of this.shortcuts) {
+                    if (shortcut.keys.includes(e.key) && 
+                        shortcut.keys.every(key => this.pressedKeys.has(key) || key === e.key)) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            
+            checkShortcuts() {
+                for (let [_, shortcut] of this.shortcuts) {
+                    if (shortcut.keys.every(key => this.pressedKeys.has(key))) {
+                        UI.logAction(`${shortcut.description} (${shortcut.keys.join('+')})`, shortcut.action);
+                        this.pressedKeys.clear(); 
+                        break; 
+                    }
+                }
+            }
+        };
+
+        const UI = {
+            actionLog: null,
+            keyElements: new Map(),
+            
+            init() {
+                this.actionLog = document.getElementById('actionLog');
+                this.setupKeyElements();
+                KeyboardManager.init();
+                this.logAction("Journal des actions initialisé", null);
+            },
+            
+            setupKeyElements() {
+                document.querySelectorAll('.key').forEach(element => {
+                    this.keyElements.set(element.dataset.key, element);
+                });
+            },
+            
+            updateKeyDisplay(key, isPressed) {
+                const element = this.keyElements.get(key);
+                if (element) {
+                    if (isPressed) {
+                        element.classList.add('active');
+                    } else {
+                        element.classList.remove('active');
+                    }
+                }
+            },
+            
+            logAction(message, action) {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'py-3 flex items-center justify-between hover:bg-gray-50 transition-colors';
+                
+                const leftContent = document.createElement('div');
+                leftContent.className = 'flex items-center space-x-4';
+                
+                const timestamp = document.createElement('span');
+                timestamp.className = 'text-gray-500 text-sm font-mono';
+                timestamp.textContent = new Date().toLocaleTimeString();
+                
+                const messageText = document.createElement('span');
+                messageText.className = 'text-gray-800';
+                messageText.textContent = message;
+                
+                leftContent.appendChild(timestamp);
+                leftContent.appendChild(messageText);
+                
+                if (message.includes('(')) {
+                    const icon = document.createElement('span');
+                    icon.className = 'text-blue-500';
+                    icon.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                        </svg>`;
+                    leftContent.insertBefore(icon, timestamp);
+                }
+                
+                logEntry.appendChild(leftContent);
+                
+                const entriesContainer = this.actionLog.querySelector('.action-log-entries');
+                entriesContainer.insertBefore(logEntry, entriesContainer.firstChild);
+                
+                const maxEntries = 50;
+                const entries = entriesContainer.children;
+                if (entries.length > maxEntries) {
+                    entriesContainer.removeChild(entries[entries.length - 1]);
+                }
+                
+                if (action && typeof action === 'function') {
+                    action();
+                }
+            }
+        };
+
+        UI.init();
+    </script>
+</body>
+</html>

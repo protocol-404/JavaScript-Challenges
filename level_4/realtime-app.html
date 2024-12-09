@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Realtime Application - JavaScript Challenge</title>
+    <title>Realtime Application - Individual Challenge</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <style>
@@ -57,9 +57,12 @@
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold text-gray-800">Realtime Chat Application</h1>
-                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Back
-                </a>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600">Individual Programmer Version</span>
+                    <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                        Back
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -68,19 +71,50 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Create a realtime chat application using WebSocket technology. Implement features like message sending, user presence, and typing indicators.
+                Create a realtime chat application using WebSocket technology. This version is designed for individual programmer testing and development.
+                Features include message sending, user presence simulation, and typing indicators.
             </p>
-            
-            <h2 class="text-xl font-semibold mb-4">Solution</h2>
-            <div class="bg-gray-100 p-4 rounded-lg mb-6" style="max-height: 400px; overflow-y: auto;">
-                <div class="flex justify-center">
-                    <h1 class="text-2xl font-semibold mb-4 text-center">
-                        Solution in development
-                        <span id="typingIndicator" class="typing-indicator"></span>
-                    </h1>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            Note: This is a development version for individual testing. For team collaboration, please use the main branch version.
+                        </p>
+                    </div>
                 </div>
             </div>
             
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="text-center p-8 bg-gray-50 rounded-lg">
+                <div class="flex justify-center">
+                    <h1 class="text-2xl font-semibold mb-4 text-center">
+                        Development in Progress
+                        <span id="typingIndicator" class="typing-indicator"></span>
+                        <img src="../assets/bug.gif" alt="Development in Progress" class="mx-auto mt-4">
+                    </h1>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-semibold mt-8 mb-4">Development Notes</h2>
+            <div class="bg-gray-50 p-6 rounded-lg">
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>WebSocket server implementation pending</li>
+                    <li>User authentication system in development</li>
+                    <li>Message persistence to be implemented</li>
+                    <li>UI components under review</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-4xl mx-auto">

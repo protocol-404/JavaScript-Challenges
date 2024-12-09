@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Stack Application - JavaScript Challenge</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .typing-indicator {
+            display: inline-block;
+            margin-left: 4px;
+        }
+        
+        .typing-indicator::after {
+            content: '...';
+            animation: typing 1.5s infinite;
+            font-weight: bold;
+        }
+        
+        @keyframes typing {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        .feature-card {
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .coming-soon {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .coming-soon::before {
+            content: 'Coming Soon';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            background: rgba(59, 130, 246, 0.9);
+            padding: 0.5rem 4rem;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Full Stack Application</h1>
+                <a href="../index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Back
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Description</h2>
+            <p class="text-gray-700 mb-4">
+                Develop a complete full-stack application with a back-end API and a front-end interface. 
+                The application should handle authentication, CRUD operations, and implement best development practices.
+            </p>
+            
+            <h2 class="text-xl font-semibold mb-4">Solution</h2>
+            <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                <div class="flex justify-center">
+                    <h1 class="text-2xl font-semibold mb-4 text-center">
+                        Solution under development
+                        <span class="typing-indicator"></span>
+                    </h1>
+                </div>
+            </div>
+            
+            <h2 class="text-xl font-semibold mb-4">Upcoming Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Backend Features -->
+                <div class="bg-white p-6 rounded-lg shadow-md feature-card">
+                    <h3 class="text-lg font-semibold mb-3 text-blue-600">Backend API</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• Express.js REST API</li>
+                        <li>• MongoDB Database</li>
+                        <li>• JWT Authentication</li>
+                        <li>• Middleware Security</li>
+                    </ul>
+                </div>
+                
+                <!-- Frontend Features -->
+                <div class="bg-white p-6 rounded-lg shadow-md feature-card">
+                    <h3 class="text-lg font-semibold mb-3 text-green-600">Frontend UI</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• React Components</li>
+                        <li>• State Management</li>
+                        <li>• Responsive Design</li>
+                        <li>• Form Validation</li>
+                    </ul>
+                </div>
+                
+                <!-- Additional Features -->
+                <div class="bg-white p-6 rounded-lg shadow-md feature-card">
+                    <h3 class="text-lg font-semibold mb-3 text-purple-600">Features</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• User Authentication</li>
+                        <li>• CRUD Operations</li>
+                        <li>• File Upload</li>
+                        <li>• Real-time Updates</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
+            <div class="bg-gray-100 p-8 rounded-lg mb-6">
+                <div class="max-w-4xl mx-auto coming-soon">
+                    <div class="bg-white p-8 rounded-lg shadow-md text-center">
+                        <img src="../assets/bug.gif" alt="Coming Soon" class="mx-auto mb-4" style="max-width: 200px;">
+                        <h3 class="text-xl font-semibold mb-2">Application under development</h3>
+                        <p class="text-gray-600">
+                            Check back soon to discover the full application!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

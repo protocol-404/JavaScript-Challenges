@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('challenges-container');
     const nav = document.getElementById('level-nav');
 
-    // Create navigation items first
     Object.entries(challenges).forEach(([level, _]) => {
         const navItem = document.createElement('li');
         const link = document.createElement('a');
@@ -13,11 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
         nav.appendChild(navItem);
     });
 
-    // Create sections with proper IDs
     Object.entries(challenges).forEach(([level, challengeList]) => {
         const section = document.createElement('section');
         section.id = `level-${level.toLowerCase()}`;
-        section.className = 'mb-8 scroll-mt-32'; // Add padding for smooth scroll
+        section.className = 'mb-8 scroll-mt-32';
         
         const title = document.createElement('h2');
         title.className = 'text-2xl font-bold text-gray-800 mb-4';
@@ -36,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(section);
     });
 
-    // Add smooth scrolling behavior
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();

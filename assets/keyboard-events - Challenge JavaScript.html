@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>keyboard-events - Challenge JavaScript</title>
+    <title>keyboard-events - JavaScript Challenge</title>
     <link href="keyboard-events%20-%20Challenge%20JavaScript_files/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="keyboard-events%20-%20Challenge%20JavaScript_files/styles.css">
     <style>
@@ -62,9 +63,9 @@
     <header class="bg-white shadow-md mb-8">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-800">Gérer les événements clavier</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Keyboard Events</h1>
                 <a href="http://127.0.0.1:5500/index.html" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </div>
@@ -74,7 +75,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">Description</h2>
             <p class="text-gray-700 mb-4">
-                Ajoutez des combinaisons de touches pour déclencher des actions spécifiques.
+                Create an interactive keyboard event listener that displays pressed keys and their properties.
             </p>
             
             <h2 class="text-xl font-semibold mb-4">Solution</h2>
@@ -93,32 +94,32 @@ const KeyboardManager = {
         // Format: [keys array, description, action]
         this.shortcuts.set('Control+S', {
             keys: ['Control', 'S'],
-            description: 'Sauvegarder',
-            action: () =&gt; UI.logAction('Sauvegarde effectuée')
+            description: 'Save',
+            action: () =&gt; UI.logAction('Saved')
         });
         
         this.shortcuts.set('Control+Z', {
             keys: ['Control', 'Z'],
-            description: 'Annuler',
-            action: () =&gt; UI.logAction('Action annulée')
+            description: 'Undo',
+            action: () =&gt; UI.logAction('Action undone')
         });
         
         this.shortcuts.set('Control+Y', {
             keys: ['Control', 'Y'],
-            description: 'Rétablir',
-            action: () =&gt; UI.logAction('Action rétablie')
+            description: 'Redo',
+            action: () =&gt; UI.logAction('Action redone')
         });
         
         this.shortcuts.set('Control+F', {
             keys: ['Control', 'F'],
-            description: 'Rechercher',
-            action: () =&gt; UI.logAction('Recherche activée')
+            description: 'Search',
+            action: () =&gt; UI.logAction('Search activated')
         });
         
         this.shortcuts.set('Control+N', {
             keys: ['Control', 'N'],
-            description: 'Nouveau',
-            action: () =&gt; UI.logAction('Nouveau document créé')
+            description: 'New',
+            action: () =&gt; UI.logAction('New document created')
         });
     },
     
@@ -188,7 +189,7 @@ const UI = {
         this.setupKeyElements();
         KeyboardManager.init();
         // Add initial message to action log
-        this.logAction("Journal des actions initialisé", null);
+        this.logAction("Action log initialized", null);
     },
     
     setupKeyElements() {
@@ -259,12 +260,12 @@ const UI = {
 </code></pre>
             </div>
 
-            <h2 class="text-xl font-semibold mb-4">Démo</h2>
+            <h2 class="text-xl font-semibold mb-4">Demo</h2>
             <div class="bg-gray-100 p-8 rounded-lg mb-6">
                 <div class="max-w-xl mx-auto">
                     <!-- Keyboard Shortcuts Display -->
                     <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
-                        <h3 class="text-lg font-semibold mb-4">Raccourcis clavier disponibles</h3>
+                        <h3 class="text-lg font-semibold">Available Keyboard Shortcuts</h3>
                         <div class="space-y-4">
                             <div class="key-combo flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
@@ -272,7 +273,7 @@ const UI = {
                                     <span>+</span>
                                     <span class="key" data-key="S">S</span>
                                 </div>
-                                <span class="text-gray-600">Sauvegarder</span>
+                                <span class="text-gray-600">Save</span>
                             </div>
                             
                             <div class="key-combo flex items-center justify-between">
@@ -281,7 +282,7 @@ const UI = {
                                     <span>+</span>
                                     <span class="key" data-key="Z">Z</span>
                                 </div>
-                                <span class="text-gray-600">Annuler</span>
+                                <span class="text-gray-600">Undo</span>
                             </div>
                             
                             <div class="key-combo flex items-center justify-between">
@@ -290,7 +291,7 @@ const UI = {
                                     <span>+</span>
                                     <span class="key" data-key="Y">Y</span>
                                 </div>
-                                <span class="text-gray-600">Rétablir</span>
+                                <span class="text-gray-600">Redo</span>
                             </div>
                             
                             <div class="key-combo flex items-center justify-between">
@@ -299,7 +300,7 @@ const UI = {
                                     <span>+</span>
                                     <span class="key" data-key="F">F</span>
                                 </div>
-                                <span class="text-gray-600">Rechercher</span>
+                                <span class="text-gray-600">Search</span>
                             </div>
                             
                             <div class="key-combo flex items-center justify-between">
@@ -308,15 +309,15 @@ const UI = {
                                     <span>+</span>
                                     <span class="key" data-key="N">N</span>
                                 </div>
-                                <span class="text-gray-600">Nouveau</span>
+                                <span class="text-gray-600">New</span>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Action Log -->
                     <div id="actionLog" class="action-log bg-white p-6 rounded-lg shadow-sm mt-6">
-                        <h3 class="text-lg font-semibold mb-4">Journal des actions</h3>
-                        <div class="action-log-entries space-y-2 max-h-[400px] overflow-y-auto divide-y divide-gray-100"><div class="py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"><div class="flex items-center space-x-4"><span class="text-gray-500 text-sm font-mono">5:23:16 PM</span><span class="text-gray-800">Journal des actions initialisé</span></div></div>
+                        <h3 class="text-lg font-semibold mb-4">Action Log</h3>
+                        <div class="action-log-entries space-y-2 max-h-[400px] overflow-y-auto divide-y divide-gray-100"><div class="py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"><div class="flex items-center space-x-4"><span class="text-gray-500 text-sm font-mono">5:23:16 PM</span><span class="text-gray-800">Action log initialized</span></div></div>
                             <!-- Action log entries will be inserted here -->
                         </div>
                     </div>
@@ -339,32 +340,32 @@ const UI = {
                 // Format: [keys array, description, action]
                 this.shortcuts.set('Control+S', {
                     keys: ['Control', 'S'],
-                    description: 'Sauvegarder',
-                    action: () => UI.logAction('Sauvegarde effectuée')
+                    description: 'Save',
+                    action: () => UI.logAction('Saved')
                 });
                 
                 this.shortcuts.set('Control+Z', {
                     keys: ['Control', 'Z'],
-                    description: 'Annuler',
-                    action: () => UI.logAction('Action annulée')
+                    description: 'Undo',
+                    action: () => UI.logAction('Action undone')
                 });
                 
                 this.shortcuts.set('Control+Y', {
                     keys: ['Control', 'Y'],
-                    description: 'Rétablir',
-                    action: () => UI.logAction('Action rétablie')
+                    description: 'Redo',
+                    action: () => UI.logAction('Action redone')
                 });
                 
                 this.shortcuts.set('Control+F', {
                     keys: ['Control', 'F'],
-                    description: 'Rechercher',
-                    action: () => UI.logAction('Recherche activée')
+                    description: 'Search',
+                    action: () => UI.logAction('Search activated')
                 });
                 
                 this.shortcuts.set('Control+N', {
                     keys: ['Control', 'N'],
-                    description: 'Nouveau',
-                    action: () => UI.logAction('Nouveau document créé')
+                    description: 'New',
+                    action: () => UI.logAction('New document created')
                 });
             },
             
@@ -434,7 +435,7 @@ const UI = {
                 this.setupKeyElements();
                 KeyboardManager.init();
                 // Add initial message to action log
-                this.logAction("Journal des actions initialisé", null);
+                this.logAction("Action log initialized", null);
             },
             
             setupKeyElements() {

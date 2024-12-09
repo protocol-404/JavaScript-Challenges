@@ -122,7 +122,6 @@ const ChartManager = {
             }
         });
 
-        // Bar Chart
         this.charts.bar = new Chart(document.getElementById('barChart'), {
             type: 'bar',
             data: this.data.categories,
@@ -136,7 +135,6 @@ const ChartManager = {
             }
         });
 
-        // Doughnut Chart
         this.charts.doughnut = new Chart(document.getElementById('doughnutChart'), {
             type: 'doughnut',
             data: this.data.revenue,
@@ -151,7 +149,6 @@ const ChartManager = {
     },
     
     setupEventListeners() {
-        // Period buttons for line chart
         document.querySelectorAll('[data-period]').forEach(button => {
             button.addEventListener('click', () => {
                 this.updatePeriod(button.dataset.period);
@@ -159,12 +156,10 @@ const ChartManager = {
             });
         });
 
-        // Stacked toggle for bar chart
         document.getElementById('stackedToggle').addEventListener('change', (e) => {
             this.toggleStacked(e.target.checked);
         });
 
-        // Shuffle button for doughnut chart
         document.getElementById('shuffleData').addEventListener('click', () => {
             this.shuffleRevenueData();
         });
@@ -190,7 +185,6 @@ const ChartManager = {
     }
 };
 
-// Initialize the application
 ChartManager.init();
 </code></pre>
             </div>
